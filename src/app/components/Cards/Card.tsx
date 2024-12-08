@@ -1,8 +1,10 @@
 // Card.tsx
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 type Product = {
+  id:number;
   tags: string;
   title: string;
   description: string;
@@ -12,6 +14,7 @@ type Product = {
 };
 
 const Card: React.FC<Product> = ({
+  id,
   tags,
   title,
   description,
@@ -21,7 +24,9 @@ const Card: React.FC<Product> = ({
 }) => {
   return (
     <div className="mb-6 m-auto md:m-0 px-2">
-      <Image src={imagesUrls} alt={title} width={300} height={300} />
+      <Link href={`/all-products/${id}`}
+      >
+        <Image src={imagesUrls} alt={title} width={300} height={300} />
       <div className="py-4">
         <h4 className="text-[#9E3500]">{tags}</h4>
         <h2 className="font-semibold">{title}</h2>
@@ -29,6 +34,7 @@ const Card: React.FC<Product> = ({
         <p className="text-text-secondary-gray">{color}</p>
       </div>
       <h3 className="font-semibold">{price}</h3>
+      </Link>
     </div>
   );
 };

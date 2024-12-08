@@ -9,6 +9,7 @@ const ProductList = () => {
       {nikeProducts.map((product) => (
         <Card
           key={product.id}
+          id={product.id}
           tags={product.tags}
           title={product.title}
           description={product.description}

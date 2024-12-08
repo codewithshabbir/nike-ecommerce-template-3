@@ -64,6 +64,7 @@ const ProductSlider = () => {
       <Slider {...settings} ref={sliderRef}>
         {airMaxProducts.map((product) => (
           <Card
+            id={product.id}
             key={product.id}
             tags={product.tags}
             title={product.title}

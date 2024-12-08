@@ -63,6 +63,7 @@ const ShopMensSlider = () => {
       <Slider {...settings} ref={sliderRef}>
         {mensProducts.map((product) => (
           <Card
+            id={product.id}
             key={product.id}
             tags={product.tags}
             title={product.title}
