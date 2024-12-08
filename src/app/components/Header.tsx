@@ -10,9 +10,9 @@ import Link from "next/link";
 const Header = () => {
   return (
     <div>
-      <div className="flex justify-between items-center px-10 ">
+      <div className="flex justify-between items-center px-10 bg-light-gray">
         {/* Top Logo */}
-        <Image src={topLogo} alt="Top Logo" />
+          <Image src={topLogo} alt="Top Logo" />
 
         {/* Top Navigation */}
         <ul className="flex space-x-6 py-3">
@@ -22,24 +22,26 @@ const Header = () => {
             </Link>
           </li>
           <li className="flex items-center border-r border-black pr-6">
-            <Link href="/help" className="leading-[14px]">
+            <Link href="/contact-us" className="leading-[14px]">
               Help
             </Link>
           </li>
           <li className="flex items-center border-r border-black pr-6">
-            <Link href="/join" className="leading-[14px]">
+            <Link href="/join-us" className="leading-[14px]">
               Join Us
             </Link>
           </li>
           <li className="flex items-center pr-6">
-            <Link href="/sign-in" className="leading-[14px]">
+            <Link href="/login" className="leading-[14px]">
               Sign In
             </Link>
           </li>
         </ul>
       </div>
-      <div className="flex px-10 justify-between items-center py-4 bg-white">
-        <Image src={logo} alt="Logo"/>
+      <div className="flex px-10 justify-between items-center py-4">
+        <Link href="/">
+          <Image src={logo} alt="Logo"/>
+        </Link>
         <ul className="flex space-x-6">
             <li>
                 <Link href="#">New & Featured</Link>
@@ -61,9 +63,9 @@ const Header = () => {
             </li>
         </ul>
         <div className="flex space-x-6">
-            <div className="flex px-4 py-3 rounded-full w-[64%] bg-background">
+            <div className="flex px-4 py-3 rounded-full w-[64%] bg-light-gray">
                 <Image src={searchIcon} alt="wishlist"/>
-                <input className="bg-background pl-4 focus-visible:outline-none w-[64%]" type="text" placeholder="Search" name="" id="" />                
+                <input className="pl-4 focus-visible:outline-none w-[64%] bg-light-gray" type="text" placeholder="Search" name="" id="" />
             </div>
             <Image src={wishlistIcon} alt="wishlist"/>
             <Image src={cartIcon} alt="cart"/>
