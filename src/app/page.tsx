@@ -79,7 +79,7 @@ export default function Home() {
       </section>
       <section className="py-10 px-10">
           <div className="max-w-screen-xl mx-auto px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-0 lg:px-20">
               {/* Icons */}
               <div>
                 <h3 className="text-lg font-semibold mb-4">Icons</h3>
