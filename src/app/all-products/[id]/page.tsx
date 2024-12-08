@@ -1,10 +1,18 @@
+// src/app/all-products/[id]/page.tsx
 import Button from '@/app/components/Button';
 import { nikeProducts } from '@/app/components/Cards/data';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import addToCartIcon from "@public/images/icons/add-to-cart.svg";
 
-export async function generateMetadata({ params }: { params: { id: number } }) {
-  const product = nikeProducts.find((prod) => prod.id === params.id);
+// Define the correct type for params
+interface Params {
+  id: string;
+}
+
+// Generate metadata for dynamic product pages
+export async function generateMetadata({ params }: { params: Params }) {
+  const product = nikeProducts.find((prod) => prod.id === parseInt(params.id));
 
   if (!product) {
     return {
@@ -18,17 +26,20 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
   };
 }
 
+// Generate static params to pre-render product pages at build time
 export async function generateStaticParams() {
   return nikeProducts.map((product) => ({
     id: product.id.toString(),
   }));
 }
 
-const ProductPage = ({ params }: { params: { id: number } }) => {
-  const product = nikeProducts.find((prod) => prod.id === params.id);
+// The main Product Page component
+const ProductPage = ({ params }: { params: Params }) => {
+  // Find the product based on the dynamic 'id' from the URL
+  const product = nikeProducts.find((prod) => prod.id === parseInt(params.id));
 
   if (!product) {
-    notFound();
+    notFound(); // If no product found, automatically show 404 page
   }
 
   return (
