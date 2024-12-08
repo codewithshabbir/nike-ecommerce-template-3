@@ -119,7 +119,7 @@ const Header = () => {
               <Image src={crossIcon} width={30} height={30} alt="Close" />
             </Link>
           </div>
-          <div className="flex px-4 py-3 mt-6 rounded-full w-[64%] bg-light-gray">
+          <div className="flex px-4 py-3 mt-6 rounded-full w-[96%] bg-light-gray">
             <Image src={searchIcon} alt="search" />
             <input
               className="pl-4 focus-visible:outline-none w-[64%] bg-light-gray"

@@ -1,12 +1,15 @@
-// ProductList.tsx
 import React from 'react';
 import { nikeProducts } from './Cards/data'; 
 import Card from './Cards/Card';
 
-const ProductList = () => {
+const ProductSlider = () => {
+  const airMaxProducts = nikeProducts.filter((product) =>
+    product.title.toLowerCase().includes('air max')
+  );
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 pb-10 border-b-2">
-      {nikeProducts.map((product) => (
+    <div className="flex flex-wrap gap-4 pb-10 border-b-2 overflow-x-auto">
+      {airMaxProducts.map((product) => (
         <Card
           key={product.id}
           tags={product.tags}
@@ -21,4 +24,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default ProductSlider;

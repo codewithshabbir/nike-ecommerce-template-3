@@ -12,14 +12,14 @@ import Button from '../components/Button';
 
 const page = () => {
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center px-10 md:px-0'>
         <h2 className='uppercase text-xl font-bold mt-8'>Get Help</h2>
-        <div className="flex px-4 py-3 rounded-md w-[30%] border-2 border-text-secondary-gray mt-4 justify-between">
-            <input className="focus-visible:outline-none w-[64%]" type="text" placeholder="What can we help you with?" name="" id="" />
+        <div className="flex px-4 py-3 rounded-md w-96 lg:w-[30%] border-2 border-text-secondary-gray mt-4 justify-between">
+            <input className="focus-visible:outline-none w-full lg:w-[64%]" type="text" placeholder="What can we help you with?" name="" id="" />
             <Image src={searchIcon} alt="wishlist"/>
         </div>
         <div className="grid grid-cols-12 px-8 md:px-16 pt-14 pb-10 bg-white text-gray-800">
-            <div className='col-span-9 border-r-[1.3px] pr-4 border-text-secondary-gray'>
+            <div className='col-span-12 lg:col-span-9 border-none lg:border-r-[1.3px] pr-0 md:pr-4 border-text-secondary-gray'>
                 <h2 className="text-2xl font-bold mb-4">
                 WHAT PAYMENT OPTIONS CAN I USE ON NIKE ORDERS?
                 </h2>
@@ -97,7 +97,7 @@ const page = () => {
                 </ul>
                 </div>
             </div>
-            <div className='col-span-3 space-y-14 px-10'>
+            <div className='col-span-12 lg:col-span-3 pt-10 lg:pt-0 space-y-14 px-10'>
                 <h2 className='uppercase font-bold text-2xl text-center'>Contact Us</h2>
                 {/* Phone Section */}
                 <div className="flex flex-col items-center space-y-2 text-center">

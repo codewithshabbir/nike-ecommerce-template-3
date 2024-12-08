@@ -6,13 +6,16 @@ import dontMissBanner from "@public/images/dont-miss-banner.jpg";
 import mensThumbnail from "@public/images/categories-thumbnail/mens-thumbnail.jpg";
 import womensThumbnail from "@public/images/categories-thumbnail/womens-thumbnail.jpg";
 import kidsThumbnail from "@public/images/categories-thumbnail/kids-thumbnail.jpg";
+import arrowRightIcon from "@public/images/icons/right-arrow.svg";
+import arrowLeftIcon from "@public/images/icons/left-arrow.svg";
 import Button from "./components/Button";
 import BannerSection from "./components/BannerSection";
+import ProductSlider from "./components/ProductSlider";
 
 export default function Home() {
   return (
     <>
-      <div className="flex items-center flex-col bg-light-gray py-2">
+      <div className="flex items-center flex-col bg-light-gray py-2 px-10 md:px-0">
         <h2>Hello Nike App</h2>
         <p>
           Download the app to access everything Nike.
@@ -33,6 +36,23 @@ export default function Home() {
               <Button text="Notify Me" classNames="rounded-full py-2"/>
               <Button text="Shop Air Max" classNames="rounded-full py-2"/>
           </div>
+        </div>
+      </section>
+      <section className="px-10">
+        <div className="flex justify-between mb-4">
+          <h2 className="font-bold">Best of Air Max</h2>
+          <div className="flex items-center gap-4">
+            <p>Shop</p>
+            <div className="bg-[#F5F5F5] px-5 py-4 rounded-full">
+              <Image src={arrowLeftIcon} alt="Arrow Left"/>
+            </div>
+            <div className="bg-[#E5E5E5] px-5 py-4 rounded-full">
+              <Image src={arrowRightIcon} alt="Arrow Right"/>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-hidden">
+          <ProductSlider/>
         </div>
       </section>
       <BannerSection heading="Featured" imageUrl={featureBanner} imageAlt="Feature Banner" secondHeading="STEP INTO WHAT FEELS GOOD" para="Cause everyone should know the feeling of running in that perfect pair." buttonText="Find Your Shoe"/>
