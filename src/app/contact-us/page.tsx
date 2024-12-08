@@ -18,7 +18,7 @@ const page = () => {
             <input className="focus-visible:outline-none w-[64%]" type="text" placeholder="What can we help you with?" name="" id="" />
             <Image src={searchIcon} alt="wishlist"/>
         </div>
-        <div className="grid grid-cols-12 px-8 md:px-16 py-8 bg-white text-gray-800">
+        <div className="grid grid-cols-12 px-8 md:px-16 pt-14 pb-10 bg-white text-gray-800">
             <div className='col-span-9 border-r-[1.3px] pr-4 border-text-secondary-gray'>
                 <h2 className="text-2xl font-bold mb-4">
                 WHAT PAYMENT OPTIONS CAN I USE ON NIKE ORDERS?
@@ -97,11 +97,11 @@ const page = () => {
                 </ul>
                 </div>
             </div>
-            <div className='col-span-3'>
-                <h2 className='uppercase font-bold text-xl text-center'>Contact Us</h2>
+            <div className='col-span-3 space-y-14 px-10'>
+                <h2 className='uppercase font-bold text-2xl text-center'>Contact Us</h2>
                 {/* Phone Section */}
                 <div className="flex flex-col items-center space-y-2 text-center">
-                   <Image src={phoneIcon} alt='Phone' width={40}/>
+                   <Image src={phoneIcon} alt='Phone' width={60}/>
                     <p className="font-semibold">000 800 919 0566</p>
                     <p>Products & Orders: 24 hours a day, 7 days a week</p>
                     <p>Company Info & Enquiries: 07:30 - 16:30, Monday - Friday</p>
@@ -109,21 +109,21 @@ const page = () => {
 
                 {/* Chat Section */}
                 <div className="flex flex-col items-center space-y-2 text-center">
-                    <Image src={phoneIcon} alt='Phone' width={40}/>
+                    <Image src={messageIcon} alt='Phone' width={60}/>
                     <p>24 hours a day</p>
                     <p>7 days a week</p>
                 </div>
 
                 {/* Email Section */}
                 <div className="flex flex-col items-center space-y-2 text-center">
-                    <Image src={phoneIcon} alt='Phone' width={40}/>
+                    <Image src={emailIcon} alt='Phone' width={60}/>
                     <p>We’ll reply within</p>
                     <p>five business days</p>
                 </div>
 
                 {/* Store Locator Section */}
                 <div className="flex flex-col items-center space-y-2 text-center">
-                    <Image src={phoneIcon} alt='Phone' width={40}/>
+                    <Image src={locationIcon} alt='Phone' width={60}/>
                     <p className="font-semibold">STORE LOCATOR</p>
                     <p>Find Nike retail stores near you</p>
                 </div>
