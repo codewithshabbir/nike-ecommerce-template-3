@@ -9,26 +9,26 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from 'next/image';
 
-const ProductSlider = () => {
-  const sliderRef = useRef<Slider | null>(null);
+const ShopMensSlider = () => {
+    const sliderRef = useRef<Slider | null>(null);
 
-  const airMaxProducts = nikeProducts.filter((product) =>
-    product.title.toLowerCase().includes('air max')
+  const mensProducts = nikeProducts.filter((product) =>
+    product.description.toLowerCase().includes("men")
   );
 
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
+    slidesToShow: 2,
+    slidesToScroll: 1,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 1,
         },
       },
       {
@@ -48,10 +48,9 @@ const ProductSlider = () => {
 
   return (
     <>
-    <div className="flex justify-between mb-4 items-center">
-          <h2 className="font-bold">Best of Air Max</h2>
+    <div className="flex mb-4 items-center justify-end">
           <div className="flex items-center gap-4">
-            <p>Shop</p>
+            <p>Shop Men's</p>
             <div className="bg-[#F5F5F5] px-5 py-4 rounded-full cursor-pointer" onClick={() => sliderRef.current?.slickPrev()}>
               <Image src={arrowLeftIcon} alt="Arrow Left"/>
             </div>
@@ -62,7 +61,7 @@ const ProductSlider = () => {
         </div>
     <div className="pb-10">
       <Slider {...settings} ref={sliderRef}>
-        {airMaxProducts.map((product) => (
+        {mensProducts.map((product) => (
           <Card
             key={product.id}
             tags={product.tags}
@@ -77,6 +76,6 @@ const ProductSlider = () => {
     </div>
     </>
   );
-};
+}
 
-export default ProductSlider;
+export default ShopMensSlider

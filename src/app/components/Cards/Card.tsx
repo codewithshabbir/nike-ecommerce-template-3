@@ -20,7 +20,7 @@ const Card: React.FC<Product> = ({
   imagesUrls,
 }) => {
   return (
-    <div className="mb-6 m-auto md:m-0">
+    <div className="mb-6 m-auto md:m-0 px-2">
       <Image src={imagesUrls} alt={title} width={300} height={300} />
       <div className="py-4">
         <h4 className="text-[#9E3500]">{tags}</h4>

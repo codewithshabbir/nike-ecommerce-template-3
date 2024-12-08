@@ -5,7 +5,7 @@ import Card from './Cards/Card';
 
 const ProductList = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 pb-10 border-b-2">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 pb-10 border-b-2">
       {nikeProducts.map((product) => (
         <Card
           key={product.id}
