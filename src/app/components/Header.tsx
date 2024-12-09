@@ -19,13 +19,10 @@ const Header = () => {
 
   return (
     <div>
-      {/* Desktop Header */}
       <div className="hidden lg:block">
         <div className="flex justify-between items-center px-10 bg-light-gray">
-          {/* Top Logo */}
           <Image src={topLogo} alt="Top Logo" />
 
-          {/* Top Navigation */}
           <ul className="flex space-x-6 py-3">
             <li className="flex items-center border-r border-black pr-6">
               <Link href="/store" className="leading-[14px]">
@@ -88,7 +85,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Header */}
       <div className="lg:hidden px-10 py-4 flex justify-between items-center">
         <Link href="/">
           <Image src={logo} alt="Logo" />
@@ -102,7 +98,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
