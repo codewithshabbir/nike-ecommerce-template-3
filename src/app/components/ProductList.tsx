@@ -1,4 +1,3 @@
-// ProductList.tsx
 import React from 'react';
 import { nikeProducts } from './Cards/data'; 
 import Card from './Cards/Card';

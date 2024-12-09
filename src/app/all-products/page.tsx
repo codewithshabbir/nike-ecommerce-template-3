@@ -12,13 +12,11 @@ const Page = () => {
 
   return (
     <div className="grid grid-cols-12 px-4 md:px-10 py-20 relative">
-      {/* Sidebar */}
       <div
         className={`col-span-3 pr-4 md:pr-20 bg-white z-10 transform ${
           isSidebarVisible ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:static p-10 lg:p-0 w-full lg:w-60 fixed top-0 left-0 h-full overflow-y-auto transition-transform duration-300`}
       >
-        {/* Hide Filters Button for Mobile */}
         <button
           className="block lg:hidden absolute top-4 right-4 text-lg"
           onClick={() => setIsSidebarVisible(false)}
@@ -108,7 +106,6 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Overlay for Mobile */}
       {isSidebarVisible && (
         <div
           className="fixed inset-0 bg-black opacity-50 lg:hidden"
@@ -116,9 +113,7 @@ const Page = () => {
         ></div>
       )}
 
-      {/* Main Content */}
       <div className="col-span-12 lg:col-span-9">
-        {/* Show Filters Button for Mobile */}
         <div className="flex justify-between lg:justify-end gap-10 mb-8">
           <button
             className="flex items-center lg:hidden"

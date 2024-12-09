@@ -37,3 +37,7 @@ body {
   background: var(--text-secondary-gray);
   border-radius: 5px;
 }
+
+.slick-slide.slick-active > div:focus-visible {
+  outline: none;
+}
