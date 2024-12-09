@@ -25,7 +25,7 @@ const Header = () => {
 
           <ul className="flex space-x-6 py-3">
             <li className="flex items-center border-r border-black pr-6">
-              <Link href="/store" className="leading-[14px]">
+              <Link href="#" className="leading-[14px]">
                 Find a Store
               </Link>
             </li>
@@ -52,22 +52,22 @@ const Header = () => {
           </Link>
           <ul className="flex space-x-6">
             <li>
-              <Link href="#">New & Featured</Link>
+              <Link href="/all-products">New & Featured</Link>
             </li>
             <li>
               <Link href="/all-products">Men</Link>
             </li>
             <li>
-              <Link href="#">Women</Link>
+              <Link href="/all-products">Women</Link>
             </li>
             <li>
-              <Link href="#">Kids</Link>
+              <Link href="/all-products">Kids</Link>
             </li>
             <li>
-              <Link href="#">Sale</Link>
+              <Link href="/all-products">Sale</Link>
             </li>
             <li>
-              <Link href="#">SNKRS</Link>
+              <Link href="/all-products">SNKRS</Link>
             </li>
           </ul>
           <div className="flex space-x-6">
@@ -124,7 +124,7 @@ const Header = () => {
           </div>
           <ul className="space-y-6 mt-6">
             <li>
-              <Link href="#" onClick={toggleMenu}>
+              <Link href="/all-products" onClick={toggleMenu}>
                 New & Featured
               </Link>
             </li>
@@ -134,28 +134,28 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="#" onClick={toggleMenu}>
+              <Link href="/all-products" onClick={toggleMenu}>
                 Women
               </Link>
             </li>
             <li>
-              <Link href="#" onClick={toggleMenu}>
+              <Link href="/all-products" onClick={toggleMenu}>
                 Kids
               </Link>
             </li>
             <li>
-              <Link href="#" onClick={toggleMenu}>
+              <Link href="/all-products" onClick={toggleMenu}>
                 Sale
               </Link>
             </li>
             <li>
-              <Link href="#" onClick={toggleMenu}>
+              <Link href="/all-products" onClick={toggleMenu}>
                 SNKRS
               </Link>
             </li>
 
             <li className="border-t-2 pt-6">
-              <Link href="/store" onClick={toggleMenu}>
+              <Link href="#" onClick={toggleMenu}>
                 Find a Store
               </Link>
             </li>
