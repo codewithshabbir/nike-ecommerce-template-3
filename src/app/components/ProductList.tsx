@@ -9,11 +9,11 @@ const ProductList = () => {
         <Card
           key={product.id}
           id={product.id}
-          tags={product.tags}
+          tags="Nike"
           title={product.title}
           description={product.description}
           color={product.color}
-          price={product.price}
+          price={product.currentPrice}
           imagesUrls={product.imagesUrls}
         />
       ))}
