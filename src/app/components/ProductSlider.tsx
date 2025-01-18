@@ -66,11 +66,11 @@ const ProductSlider = () => {
           <Card
             id={product.id}
             key={product.id}
-            tags={product.tags}
+            tags="nike"
             title={product.title}
             description={product.description}
             color={product.color}
-            price={product.price}
+            price={product.currentPrice}
             imagesUrls={product.imagesUrls}
           />
         ))}
