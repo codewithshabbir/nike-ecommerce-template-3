@@ -25,7 +25,7 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       <div className='col-span-12 md:col-span-6 pr-18 pt-10 md:pt-0'>
         <h2 className='text-3xl'>{product.title}</h2>
         <p className='py-10'>Turn style on its head with this crafted take on the Air Jordan 1 Mid. Its "inside out"-inspired construction, including unique layering and exposed foam accents, ups the ante on this timeless Jordan Brand silhouette. Details like the deco stitching on the Swoosh add coveted appeal, while the unexpected shading, rich mixture of materials and aged midsole aesthetic give this release an artisan finish.</p>
-        <h3>{product.price}</h3>
+        <h3>{product.currentPrice}</h3>
         <div className='flex mt-6'>
           <Link href='/cart'>
             <Button text='Add to Cart' classNames='rounded-full py-2' />
