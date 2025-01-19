@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { TbTruckReturn } from "react-icons/tb";
 
 
-const ProductPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
 
   console.log('prouct id',id);
   const productData:ProductListTypes = await fetchSingleProduct(id);
