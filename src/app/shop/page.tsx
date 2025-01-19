@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
 import filterIcon from "@public/images/icons/filter.svg";
@@ -8,18 +8,18 @@ import ProductList from '../components/ProductList';
 import Link from 'next/link';
 
 const Page = () => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  // const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   return (
     <div className="grid grid-cols-12 px-4 md:px-10 py-20 relative">
       <div
-        className={`col-span-3 pr-4 md:pr-20 bg-white z-10 transform ${
-          isSidebarVisible ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static p-10 lg:p-0 w-full lg:w-60 fixed top-0 left-0 h-full overflow-y-auto transition-transform duration-300`}
+        className={`col-span-3 pr-4 md:pr-20 bg-white z-10 transform 
+          // { isSidebarVisible ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0 lg:static p-10 lg:p-0 w-full lg:w-60 fixed top-0 left-0 h-full overflow-y-auto transition-transform duration-300`}
       >
         <button
           className="block lg:hidden absolute top-4 right-4 text-lg"
-          onClick={() => setIsSidebarVisible(false)}
+          // onClick={() => setIsSidebarVisible(false)}
         >
           ✕ Hide Filters
         </button>
@@ -106,18 +106,18 @@ const Page = () => {
         </div>
       </div>
 
-      {isSidebarVisible && (
+      {/* {isSidebarVisible && ( */}
         <div
           className="fixed inset-0 bg-black opacity-50 lg:hidden"
-          onClick={() => setIsSidebarVisible(false)}
+          // onClick={() => setIsSidebarVisible(false)}
         ></div>
-      )}
+      {/* )} */}
 
       <div className="col-span-12 lg:col-span-9">
         <div className="flex justify-between lg:justify-end gap-10 mb-8">
           <button
             className="flex items-center lg:hidden"
-            onClick={() => setIsSidebarVisible(true)}
+            // onClick={() => setIsSidebarVisible(true)}
           >
             Show Filters <Image className="ms-2" src={filterIcon} alt="Filter" />
           </button>

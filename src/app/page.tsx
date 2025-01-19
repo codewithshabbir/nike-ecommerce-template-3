@@ -8,7 +8,7 @@ import womensThumbnail from "@public/images/categories-thumbnail/womens-thumbnai
 import kidsThumbnail from "@public/images/categories-thumbnail/kids-thumbnail.jpg";
 import Button from "./components/Button";
 import BannerSection from "./components/BannerSection";
-import ProductSlider from "./components/ProductSlider";
+import ProductSlider from "./components/ProductAirMaxSlider";
 import ShopMensSlider from "./components/ShopMensSlider";
 import ShopWomensSlider from "./components/ShopWomensSlider";
 

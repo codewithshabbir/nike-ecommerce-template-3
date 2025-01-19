@@ -1,21 +1,28 @@
 "use client"
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Slider from "react-slick";
-import { nikeProducts } from './Cards/data'; 
 import arrowRightIcon from "@public/images/icons/right-arrow.svg";
 import arrowLeftIcon from "@public/images/icons/left-arrow.svg";
 import Card from './Cards/Card';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from 'next/image';
+import { ProductCardTypes } from '../@types/types';
+import { fetchProductListByWomens } from '../api/productApi';
 
 const ShopWomensSlider = () => {
     const sliderRef = useRef<Slider | null>(null);
+    const [womensProducts, setWomensProducts] = useState<ProductCardTypes[]>([]);
 
-    const womensProducts = nikeProducts.filter((product) =>
-      product.description.toLowerCase().includes("women")
-    );
-  
+    // Fetching Mens products using useEffect
+    useEffect(() => {
+      const fetchData = async () => {
+        const products = await fetchProductListByWomens();
+        setWomensProducts(products);
+      };
+      fetchData();
+    }, []);
+
     const settings = {
       dots: false,
       infinite: true,
@@ -63,14 +70,14 @@ const ShopWomensSlider = () => {
         <Slider {...settings} ref={sliderRef}>
           {womensProducts.map((product) => (
             <Card
-              id={product.id}
-              key={product.id}
-              tags="Nike"
-              title={product.title}
-              description={product.description}
+              key={product._id}
+              _id={product._id}
+              status={product.status}
+              name={product.name}
               color={product.color}
-              price={product.currentPrice}
-              imagesUrls={product.imagesUrls}
+              currentPrice={product.currentPrice}
+              discountedPrice={product.discountedPrice}
+              image_url={product.image_url}
             />
           ))}
         </Slider>

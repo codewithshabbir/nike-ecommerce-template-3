@@ -1,20 +1,24 @@
 import React from 'react';
-import { nikeProducts } from './Cards/data'; 
 import Card from './Cards/Card';
+import { fetchProductList } from '../api/productApi';
+import { ProductCardTypes } from '../@types/types';
 
-const ProductList = () => {
+const ProductList = async () => {
+
+  const nikeProducts:ProductCardTypes[] = await fetchProductList();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 pb-10 border-b-2">
       {nikeProducts.map((product) => (
         <Card
-          key={product.id}
-          id={product.id}
-          tags="Nike"
-          title={product.title}
-          description={product.description}
+          key={product._id.split('-')[1]}
+          _id={product._id.split('-')[1]}
+          status={product.status}
+          name={product.name}
           color={product.color}
-          price={product.currentPrice}
-          imagesUrls={product.imagesUrls}
+          currentPrice={product.currentPrice}
+          discountedPrice={product.discountedPrice}
+          image_url={product.image_url}
         />
       ))}
     </div>

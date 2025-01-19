@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* Other config options */
 
   images: {
-    domains: ['nike-ecommerce-template-3.vercel.app'],  // Allow loading images from this domain
+    domains: ['nike-ecommerce-template-3.vercel.app', 'cdn.sanity.io'],  // Allow loading images from this domain
   },
 
   webpack: (config) => {

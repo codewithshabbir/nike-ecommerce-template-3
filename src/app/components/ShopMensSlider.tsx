@@ -1,20 +1,27 @@
 "use client"
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Slider from "react-slick";
-import { nikeProducts } from './Cards/data'; 
 import arrowRightIcon from "@public/images/icons/right-arrow.svg";
 import arrowLeftIcon from "@public/images/icons/left-arrow.svg";
 import Card from './Cards/Card';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from 'next/image';
+import { fetchProductListByMens } from '../api/productApi';
+import { ProductCardTypes } from '../@types/types';
 
 const ShopMensSlider = () => {
     const sliderRef = useRef<Slider | null>(null);
+    const [mensProducts, setmensProducts] = useState<ProductCardTypes[]>([]);
 
-  const mensProducts = nikeProducts.filter((product) =>
-    product.description.toLowerCase().includes("men")
-  );
+    // Fetching Mens products using useEffect
+    useEffect(() => {
+      const fetchData = async () => {
+        const products = await fetchProductListByMens();
+        setmensProducts(products);
+      };
+      fetchData();
+    }, []);
 
   const settings = {
     dots: false,
@@ -63,14 +70,14 @@ const ShopMensSlider = () => {
       <Slider {...settings} ref={sliderRef}>
         {mensProducts.map((product) => (
           <Card
-            id={product.id}
-            key={product.id}
-            tags="Nike"
-            title={product.title}
-            description={product.description}
+            key={product._id}
+            _id={product._id}
+            status={product.status}
+            name={product.name}
             color={product.color}
-            price={product.currentPrice}
-            imagesUrls={product.imagesUrls}
+            currentPrice={product.currentPrice}
+            discountedPrice={product.discountedPrice}
+            image_url={product.image_url}
           />
         ))}
       </Slider>
