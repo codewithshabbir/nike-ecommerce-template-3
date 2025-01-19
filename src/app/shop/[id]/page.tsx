@@ -4,10 +4,11 @@ import Button from '@/app/components/Button';
 import StarRating from '@/app/components/StarRating';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from "react";
 import { TbTruckReturn } from "react-icons/tb";
 
-const ProductPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = React.use(params);
 
   console.log('Product ID:', id);
   const productData: ProductListTypes = await fetchSingleProduct(id);
