@@ -26,6 +26,7 @@ export interface ProductCardTypes {
   discountedPrice: number,
   name: string;
   color: string;
+  category? : string;
   image_url: string;
 };
 

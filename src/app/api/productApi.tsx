@@ -21,6 +21,7 @@ export const fetchProductList = async () => {
     currentPrice,
     discountedPrice,
     color,
+    category,
     status,
     brandName,
     'image_url': image.asset->url
@@ -154,3 +155,15 @@ export const fetchProductListByWomens = async () => {
     return [];
   }
 };
+
+export const fetchProductsCategory = async () => {
+  try {
+    const productsData = await fetchProductList();
+    const categories = productsData.map((product) => product.category);
+    const uniqueCategory = [...new Set(categories)];
+    return uniqueCategory;    
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return undefined;
+  }
+}
