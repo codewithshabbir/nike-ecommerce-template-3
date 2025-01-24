@@ -5,59 +5,103 @@ import filterIcon from "@public/images/icons/filter.svg";
 import dropdownIcon from "@public/images/icons/dropdown.svg";
 import ProductList from "../components/ProductList";
 import Link from "next/link";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { fetchProductsCategory } from "../api/productApi";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { fetchProductList, fetchProductsCategory } from "../api/productApi";
+import { ProductCardTypes } from "../@types/types";
+import Card from "../components/Cards/Card";
 
 // Skeleton Loader Component
-const SkeletonLoader = () => {
-  return (
-    <div className="space-y-4">
-      {[...Array(5)].map((_, index) => (
-        <div
-          key={index}
-          className="h-6 bg-gray-300 animate-pulse rounded-md"
-        ></div>
-      ))}
-    </div>
-  );
-};
+const SkeletonLoader = () => (
+  <div className="space-y-4">
+    {[...Array(5)].map((_, index) => (
+      <div key={index} className="h-6 bg-gray-300 animate-pulse rounded-md"></div>
+    ))}
+  </div>
+);
+
+// Skeleton Loader Component for Products
+const ProductSkeletonLoader = () => (
+  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 pb-10 border-b-2">
+    {[...Array(9)].map((_, index) => (
+      <div key={index} className="p-4">
+        <div className="bg-gray-300 animate-pulse h-60 mb-4 rounded-md"></div>
+        <div className="h-4 bg-gray-300 animate-pulse w-3/4 mb-2 rounded-md"></div>
+        <div className="h-4 bg-gray-300 animate-pulse w-1/2 mb-2 rounded-md"></div>
+        <div className="h-4 bg-gray-300 animate-pulse w-1/4 rounded-md"></div>
+      </div>
+    ))}
+  </div>
+);
 
 const Page = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
-  const [openAccordions, setOpenAccordions] = useState<string[]>([
-    "item-1", // Default open item
-    "item-2", // Default open item
-    "item-3", // Default open item
-  ]);
+  const [openAccordions, setOpenAccordions] = useState<string[]>(["category-accordian", "gender-accordian", "price-accordian"]);
+  const [allProducts, setAllProducts] = useState<ProductCardTypes[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductCardTypes[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Fetch all products
+  useEffect(() => {
+    const getProducts = async () => {
+      setLoading(true);
+      const products = await fetchProductList();
+      setAllProducts(products); // Store original products
+      setFilteredProducts(products); // Display original products initially
+      setLoading(false);
+    };
+    getProducts();
+  }, []);
+
+  // Fetch categories
   useEffect(() => {
     const getCategories = async () => {
+      setLoading(true);
       const productCategories = await fetchProductsCategory();
-      const validCategories =
-        productCategories?.filter((category): category is string => category !== undefined) || [];
+      const validCategories = productCategories?.filter((category): category is string => category !== undefined) || [];
       setCategories(validCategories);
-      setLoading(false); // Set loading to false after categories are fetched
+      setLoading(false);
     };
     getCategories();
   }, []);
 
+  // Filter products based on selected categories
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      setFilteredProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter((product) =>
+        selectedCategories.includes(product.category?.toLowerCase() || "")
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [selectedCategories, allProducts]);
+
+  // Handle category selection and deselection
+  const handleCategoryFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.target;
+
+    setSelectedCategories((prevSelectedCategories) => {
+      if (checked) {
+        return [...prevSelectedCategories, value.toLowerCase()];
+      } else {
+        return prevSelectedCategories.filter((category) => category !== value.toLowerCase());
+      }
+    });
+    setIsSidebarVisible(false)
+  };
+
+  // Toggle accordions
   const toggleAccordion = (value: string) => {
     setOpenAccordions((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value]
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
     );
   };
 
   return (
     <div className="grid grid-cols-12 px-4 md:px-10 py-20 relative">
+      {/* Sidebar */}
       <div
         className={`col-span-3 pr-4 md:pr-20 bg-white z-10 transform ${
           isSidebarVisible ? "translate-x-0" : "-translate-x-full"
@@ -70,23 +114,23 @@ const Page = () => {
           ✕ Hide Filters
         </button>
 
-        {/* Set default open accordions */}
         <Accordion type="multiple" value={openAccordions}>
-          <AccordionItem value="item-1">
-            <AccordionTrigger
-              className="hover:no-underline"
-              onClick={() => toggleAccordion("item-1")}
-            >
-              Categories
-            </AccordionTrigger>
+          {/* Categories */}
+          <AccordionItem value="category-accordian">
+            <AccordionTrigger onClick={() => toggleAccordion("category-accordian")}>Categories</AccordionTrigger>
             <AccordionContent>
               {loading ? (
-                <SkeletonLoader /> // Show skeleton loader while loading categories
+                <SkeletonLoader />
               ) : (
                 <ul>
                   {categories.map((category) => (
                     <li key={category}>
-                      <input type="checkbox" id={category.toLowerCase()} />
+                      <input
+                        type="checkbox"
+                        value={category.toLowerCase()}
+                        id={category.toLowerCase()}
+                        onChange={handleCategoryFilter}
+                      />
                       <label className="pl-2 cursor-pointer" htmlFor={category.toLowerCase()}>
                         {category}
                       </label>
@@ -96,34 +140,30 @@ const Page = () => {
               )}
             </AccordionContent>
           </AccordionItem>
-
-          <AccordionItem value="item-2">
-            <AccordionTrigger
-              className="hover:no-underline"
-              onClick={() => toggleAccordion("item-2")}
-            >
+          <AccordionItem value="gender-accordian">
+            <AccordionTrigger onClick={() => toggleAccordion("gender-accordian")}>
               Gender
             </AccordionTrigger>
             <AccordionContent>
+              {/* Gender filters */}
               <div>
                 <input type="checkbox" id="men" />
-                <label className="pl-2 cursor-pointer" htmlFor="men">Men</label>
+                <label className="pl-2 cursor-pointer" htmlFor="men">
+                  Men
+                </label>
               </div>
               <div>
                 <input type="checkbox" id="women" />
-                <label className="pl-2 cursor-pointer" htmlFor="women">Women</label>
-              </div>
-              <div>
-                <input type="checkbox" id="unisex" />
-                <label className="pl-2 cursor-pointer" htmlFor="unisex">Unisex</label>
+                <label className="pl-2 cursor-pointer" htmlFor="women">
+                  Women
+                </label>
               </div>
             </AccordionContent>
           </AccordionItem>
-
-          <AccordionItem value="item-3">
+          <AccordionItem value="price-accordian">
             <AccordionTrigger
               className="hover:no-underline"
-              onClick={() => toggleAccordion("item-3")}
+              onClick={() => toggleAccordion("price-accordian")}
             >
               Shop By Price
             </AccordionTrigger>
@@ -148,24 +188,39 @@ const Page = () => {
         ></div>
       )}
 
+      {/* Main Content */}
       <div className="col-span-12 lg:col-span-9">
         <div className="flex justify-between lg:justify-end gap-10 mb-8">
           <button
             className="flex items-center lg:hidden"
             onClick={() => setIsSidebarVisible(true)}
           >
-            Show Filters{" "}
-            <Image className="ms-2" src={filterIcon} alt="Filter" />
-          </button>
-          <button className="hidden lg:flex">
-            Hide Filters{" "}
-            <Image className="ms-2" src={filterIcon} alt="Filter" />
+            Show Filters <Image className="ms-2" src={filterIcon} alt="Filter" />
           </button>
           <div className="flex items-center">
             Sort By <Image className="ms-2" src={dropdownIcon} alt="Dropdown" />
           </div>
         </div>
-        <ProductList />
+        <div>
+          {loading ? (
+            <ProductSkeletonLoader />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 pb-10 border-b-2">
+              {filteredProducts.map((product) => (
+                <Card
+                  key={product._id.split("-")[1]}
+                  _id={product._id.split("-")[1]}
+                  status={product.status}
+                  name={product.name}
+                  color={product.color}
+                  currentPrice={product.currentPrice}
+                  discountedPrice={product.discountedPrice}
+                  image_url={product.image_url}
+                />
+              ))}
+            </div>
+          )}
+        </div>
         <div>
           <h3 className="mt-12 font-bold">Related Categories</h3>
           <ul className="flex gap-x-4 gap-y-2 flex-wrap mt-4">

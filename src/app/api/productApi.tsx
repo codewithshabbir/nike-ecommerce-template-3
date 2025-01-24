@@ -167,3 +167,19 @@ export const fetchProductsCategory = async () => {
     return undefined;
   }
 }
+
+export const fetchProductsCategoryByGender = async () => {
+  try {
+    const productCategory = await fetchProductsCategory();
+    const productCategoryByGender = productCategory?.filter((item) =>
+      item?.includes("Men") || 
+      item?.includes("Women") || 
+      item?.includes("Kids") || 
+      item?.includes("Baby/Toddler")
+    );
+    return productCategoryByGender;
+  } catch (error) {
+    console.error('Error fetching categories by gender:', error)
+    return undefined;
+  }
+}
