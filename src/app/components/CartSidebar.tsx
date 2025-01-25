@@ -57,13 +57,23 @@ const CartSidebar: React.FC<cartSidebarProps> = ({ onClickFun, value }) => {
         )}
       </div>
 
-      {/* Footer with Checkout button */}
-      <div
-        onClick={() => onClickFun(value)}
-        className="flex-shrink-0 bg-gray-100 py-4 px-6 flex justify-between items-center rounded-b-lg"
-      >
-        <Button text="Checkout" classNames="rounded-md py-2"/>
-      </div>
+      {/* Footer with Checkout options */}
+      {
+        cart.length > 0 && (
+          <div onClick={() => onClickFun(value)} className="flex-shrink-0 bg-gray-100 py-4 px-6 flex flex-col items-center rounded-b-lg space-y-2">
+            <Button
+              text="View and Edit Cart"
+              link="/cart"
+              classNames="rounded-md py-2 w-full bg-transparent text-black uppercase text-sm"
+            />
+            <Button
+              text="Go To Checkout"
+              link="/checkout"
+              classNames="rounded-md py-2 w-full bg-black text-white uppercase text-sm"
+            />
+          </div>
+        )
+      }
     </div>
   );
 };

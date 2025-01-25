@@ -38,7 +38,7 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
         <div className='flex my-4'>
           <Link href='/cart'>
-            <Button text='Add to Cart' classNames='rounded-full py-2' />
+            <Button text='Add to Cart' classNames='rounded-full py-2 text-white' />
           </Link>
         </div>
         <div>

@@ -24,6 +24,7 @@ export interface ProductCardTypes {
   status: string;
   currentPrice: number,
   discountedPrice: number,
+  shortDescription: string,
   name: string;
   color: string;
   category? : string;

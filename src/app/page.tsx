@@ -33,8 +33,8 @@ export default function Home() {
             max.
           </p>
           <div className='flex gap-2'>
-              <Button text="Notify Me" classNames="rounded-full py-2"/>
-              <Button text="Shop Air Max" classNames="rounded-full py-2"/>
+              <Button text="Notify Me" classNames="rounded-full text-white"/>
+              <Button text="Shop Air Max" classNames="rounded-full text-white"/>
           </div>
         </div>
       </section>

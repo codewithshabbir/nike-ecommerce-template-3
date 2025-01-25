@@ -15,6 +15,7 @@ const Card: React.FC<ProductCardTypes> = ({
   color,
   currentPrice,
   discountedPrice,
+  shortDescription,
   image_url,
 }) => {
   const { addToCart } = useCart();
@@ -27,6 +28,7 @@ const Card: React.FC<ProductCardTypes> = ({
       image_url,
       currentPrice,
       discountedPrice,
+      shortDescription,
       color,
       status,
     };
@@ -69,8 +71,8 @@ const Card: React.FC<ProductCardTypes> = ({
           </div>
 
           {/* Add to Cart Button */}
-          <div className="absolute z-[2] w-[86%] left-1/2 transform -translate-x-1/2 opacity-0 bottom-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:-translate-y-2">
-            <Button text="Add to Cart" classNames="rounded-md py-2" clickFun={handleAddToCart}/>
+          <div className="absolute z-[2] w-[86%] left-1/2 transform -translate-x-1/2 opacity-0 bottom-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:-translate-y-2" >
+            <Button text="Add to Bag" classNames="rounded-md py-2 text-white uppercase text-sm" clickFun={handleAddToCart}/>
           </div>
         </div>
 

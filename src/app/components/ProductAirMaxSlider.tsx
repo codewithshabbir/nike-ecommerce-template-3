@@ -83,6 +83,7 @@ const ProductSlider = () => {
               name={product.name}
               color={product.color}
               currentPrice={product.currentPrice}
+              shortDescription={product.shortDescription}
               discountedPrice={product.discountedPrice}
               image_url={product.image_url}
             />

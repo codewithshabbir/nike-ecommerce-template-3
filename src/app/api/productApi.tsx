@@ -24,6 +24,7 @@ export const fetchProductList = async () => {
     category,
     status,
     brandName,
+    shortDescription,
     'image_url': image.asset->url
   }`;
 
