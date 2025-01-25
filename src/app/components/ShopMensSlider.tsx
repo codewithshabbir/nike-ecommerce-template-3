@@ -77,6 +77,7 @@ const ShopMensSlider = () => {
             color={product.color}
             currentPrice={product.currentPrice}
             discountedPrice={product.discountedPrice}
+            shortDescription={product.shortDescription}
             image_url={product.image_url}
           />
         ))}
