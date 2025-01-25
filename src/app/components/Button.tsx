@@ -1,15 +1,31 @@
-import React from 'react';
+import React from "react";
+import { ButtonProps } from "../@types/types";
+import Link from "next/link";
 
-interface ButtonProps {
-  text: string;
-  classNames: string;
-}
-
-const Button: React.FC<ButtonProps> = ({ text, classNames }) => {
+const Button: React.FC<ButtonProps> = ({
+  text,
+  classNames,
+  link,
+  clickFun,
+}) => {
   return (
-    <div className={`bg-black mb-4 px-4 text-white text-center cursor-pointer hover:bg-transparent border-2 border-black hover:text-black transition-all duration-300 ease-in-out ${classNames}`}>
-      {text}
-    </div>
+    <>
+      {link ? (
+        <Link
+          href={link}
+          className={`bg-black w-full mb-4 px-4 text-white text-center cursor-pointer hover:bg-transparent border-2 border-black hover:text-black transition-all duration-300 ease-in-out ${classNames}`}
+        >
+          {text}
+        </Link>
+      ) : (
+        <button
+          onClick={clickFun}
+          className={`bg-black w-full mb-4 px-4 text-white text-center cursor-pointer hover:bg-transparent border-2 border-black hover:text-black transition-all duration-300 ease-in-out ${classNames}`}
+        >
+          {text}
+        </button>
+      )}
+    </>
   );
 };
 

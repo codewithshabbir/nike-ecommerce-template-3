@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Image from "next/image";
 import React, { useState } from "react";
 import topLogo from "@public/images/logo/favicon.svg";
@@ -9,12 +9,22 @@ import searchIcon from "@public/images/icons/search.svg";
 import menuIcon from "@public/images/icons/menu.svg";
 import crossIcon from "@public/images/icons/cross.svg";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+import CartSidebar from "./CartSidebar";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [sidebarOpen, setsidebarOpen] = useState(false);
+
+  const { cartCount } = useCart(); // Get cart item count from context
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Toggle cart sidebar visibility
+  const toggleAddToCartSidebar = (isOpen: boolean) => {
+    setsidebarOpen(isOpen);
   };
 
   return (
@@ -80,7 +90,15 @@ const Header = () => {
               />
             </div>
             <Image src={wishlistIcon} alt="wishlist" />
-            <Image src={cartIcon} alt="cart" />
+            <div
+              className="relative cursor-pointer flex items-center"
+              onClick={() => toggleAddToCartSidebar(true)}
+            >
+              <Image src={cartIcon} alt="cart" />
+              <span className="absolute top-2 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
+                {cartCount}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -96,6 +114,14 @@ const Header = () => {
             <Image src={menuIcon} width={30} height={30} alt="Menu" />
           </Link>
         </div>
+      </div>
+
+      <div
+        className={`fixed top-0 right-0 w-80 h-full bg-white z-10 
+        transition-transform duration-300 transform 
+        ${sidebarOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <CartSidebar onClickFun={toggleAddToCartSidebar} value={false} />
       </div>
 
       <div

@@ -47,8 +47,8 @@ const Page = () => {
     const getProducts = async () => {
       setLoading(true);
       const products = await fetchProductList();
-      setAllProducts(products); // Store original products
-      setFilteredProducts(products); // Display original products initially
+      setAllProducts(products);
+      setFilteredProducts(products);
       setLoading(false);
     };
     getProducts();
@@ -205,7 +205,7 @@ const Page = () => {
           {loading ? (
             <ProductSkeletonLoader />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 pb-10 border-b-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 border-b-2 gap-4">
               {filteredProducts.map((product) => (
                 <Card
                   key={product._id.split("-")[1]}

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { CartProvider } from "@/context/CartContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,9 +27,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <CartProvider>
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <Header/>
         <main>
@@ -37,5 +39,6 @@ export default function RootLayout({
         <Footer/>
       </body>
     </html>
+    </CartProvider>
   );
 }

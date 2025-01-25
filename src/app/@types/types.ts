@@ -30,6 +30,26 @@ export interface ProductCardTypes {
   image_url: string;
 };
 
+export interface ButtonProps {
+  text: string;
+  classNames: string;
+  clickFun?: () => void;
+  link?: string;
+}
+
 export interface StarRatingProps {
   rating: number;
+}
+
+export interface cartSidebarProps {
+  onClickFun: (value: boolean) => void;
+  value: boolean;
+}
+
+// Cart context type, used for managing cart state, adding/removing items, and counting items
+export type CartContextType = {
+  cart: ProductCardTypes[]; // Array of products in the cart
+  addToCart: (item: ProductCardTypes) => void; // Function to add a product to the cart
+  removeFromCart?: (item: ProductCardTypes) => void; 
+  cartCount: number;
 }
