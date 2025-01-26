@@ -14,18 +14,13 @@ import CartSidebar from "./CartSidebar";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [sidebarOpen, setsidebarOpen] = useState(false);
 
-  const { cartCount } = useCart(); // Get cart item count from context
+  const { cartCount, toggleAddToCartSidebar, sidebarOpen } = useCart(); // Get cart item count from context
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Toggle cart sidebar visibility
-  const toggleAddToCartSidebar = (isOpen: boolean) => {
-    setsidebarOpen(isOpen);
-  };
 
   return (
     <div>

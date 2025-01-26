@@ -51,6 +51,8 @@ export interface cartSidebarProps {
 export type CartContextType = {
   cart: ProductCardTypes[]; // Array of products in the cart
   addToCart: (item: ProductCardTypes) => void; // Function to add a product to the cart
-  removeFromCart?: (item: ProductCardTypes) => void; 
+  removeFromCart?: (item: string) => void; 
+  toggleAddToCartSidebar: (isOpen: boolean) => void;
+  sidebarOpen: boolean;
   cartCount: number;
 }

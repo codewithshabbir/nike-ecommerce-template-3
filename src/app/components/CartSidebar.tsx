@@ -6,7 +6,16 @@ import Button from "./Button";
 import { cartSidebarProps } from "../@types/types";
 
 const CartSidebar: React.FC<cartSidebarProps> = ({ onClickFun, value }) => {
-  const { cart } = useCart();
+  const { cart, removeFromCart } = useCart();
+
+  // Check if removeFromCart is defined before invoking it
+  const handleRemoveFromCart = (itemId: string) => {
+    if (removeFromCart) {
+      removeFromCart(itemId);
+    } else {
+      console.error("removeFromCart function is not available.");
+    }
+  };
 
   return (
     <div className="w-full max-w-md h-screen bg-white shadow-lg rounded-lg flex flex-col">
@@ -43,12 +52,18 @@ const CartSidebar: React.FC<cartSidebarProps> = ({ onClickFun, value }) => {
                 />
                 <div>
                   <h3 className="text-sm font-medium">{item.name}</h3>
-                  <p className="text-sm text-gray-500">Rs: {item.currentPrice}</p>
+                  <div className="flex gap-2">
+                    <span>Rs: {item.currentPrice}</span>
+                    {item.discountedPrice && (
+                      <span className="text-gray-500 line-through">Rs: {item.discountedPrice}</span>
+                    )}
+                  </div>
                 </div>
               </div>
               <button
                 className="text-gray-600 hover:text-red-600"
                 aria-label={`Remove ${item.name} from cart`}
+                onClick={() => handleRemoveFromCart(item._id)}
               >
                 <IoTrashOutline className="w-6 h-6" />
               </button>
