@@ -1,6 +1,7 @@
 'use client'
 import { CartContextType, ProductCardTypes, ProductListTypes } from "@/app/@types/types";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { toast, Bounce } from 'react-toastify';
 
 // Create context to manage the cart state
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -9,6 +10,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<ProductCardTypes[]>([]); // State to hold cart items
   const [sidebarOpen, setsidebarOpen] = useState(false);
+  const [removedItemName, setRemovedItemName] = useState<string | null>(null); // Track removed item name
 
   // Toggle cart sidebar visibility
   const toggleAddToCartSidebar = (isOpen: boolean) => {
@@ -38,9 +40,30 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const removeFromCart = (itemId: string) => {
     setCart((prevCart) => {
       const updatedCart = prevCart.filter((item) => item._id !== itemId);
+      const removedItem = prevCart.find(item => item._id === itemId);
+      if (removedItem) {
+        setRemovedItemName(removedItem.name); // Set removed item name
+      }
       return updatedCart;
     });
   };
+
+  // Trigger toast after the cart state updates
+  useEffect(() => {
+    if (removedItemName) {
+      toast.error(`${removedItemName} has been removed from the cart!`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+        transition: Bounce, // Correct transition type
+      });
+      setRemovedItemName(null); // Reset removed item name after the toast
+    }
+  }, [removedItemName]); // Runs when removedItemName changes
 
   return (
     <CartContext.Provider value={{ cart, addToCart, cartCount: cart.length, sidebarOpen, toggleAddToCartSidebar, removeFromCart }}>

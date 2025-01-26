@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import filterIcon from "@public/images/icons/filter.svg";
 import dropdownIcon from "@public/images/icons/dropdown.svg";
-import ProductList from "../components/ProductList";
 import Link from "next/link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { fetchProductList, fetchProductsCategory } from "../api/productApi";
 import { ProductCardTypes } from "../@types/types";
 import Card from "../components/Cards/Card";
+import { ToastContainer, Bounce } from 'react-toastify';
+
 
 // Skeleton Loader Component
 const SkeletonLoader = () => (
@@ -222,6 +223,22 @@ const Page = () => {
             </div>
           )}
         </div>
+
+      
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+          />
+
         <div>
           <h3 className="mt-12 font-bold">Related Categories</h3>
           <ul className="flex gap-x-4 gap-y-2 flex-wrap mt-4">
