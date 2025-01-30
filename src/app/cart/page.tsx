@@ -14,7 +14,7 @@ const Page = () => {
         {/* Free Delivery Section */}
         <div className="bg-gray-100 p-4 rounded-md text-sm text-gray-700 mb-6">
           <p>
-            <strong>Free Delivery</strong> <br /> Applies to orders of ₹14,000.00 or
+            <strong>Free Delivery</strong> <br /> Applies to orders of Rs: 3000 or
             more.{" "}
             <a href="#" className="text-black underline">
               View details
@@ -52,8 +52,8 @@ const Page = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-4 md:mt-0 flex flex-col items-start md:items-end">
-                    <p className="font-medium text-gray-800">Rs: {item.currentPrice}</p>
+                  <div className="mt-4 w-40 md:mt-0 flex flex-col items-start md:items-end">
+                    <p className="font-medium text-gray-800">Rs: {item.discountedPrice}</p>
                     <div className="flex items-center gap-4 text-gray-600 mt-4">
                       <button className="hover:text-red-600">
                         <i className="fas fa-heart"></i>
@@ -76,7 +76,7 @@ const Page = () => {
             <div className="bg-gray-100 p-6 rounded-md">
               <div className="flex justify-between mb-4">
                 <p>Subtotal</p>
-                <p>Rs: {cart.reduce((sum, item) => sum + item.currentPrice, 0)}</p>
+                <p>Rs: {cart.reduce((sum, item) => sum + item.discountedPrice, 0)}</p>
               </div>
               <div className="flex justify-between mb-4">
                 <p>Estimated Delivery & Handling</p>
@@ -84,12 +84,13 @@ const Page = () => {
               </div>
               <div className="flex justify-between font-semibold text-lg border-t border-gray-300 pt-4">
                 <p>Total</p>
-                <p>RS: {cart.reduce((sum, item) => sum + item.currentPrice, 0)}</p>
+                <p>RS: {cart.reduce((sum, item) => sum + item.discountedPrice, 0)}</p>
               </div>
             </div>
             <Button
               text="Member Checkout"
-              classNames="rounded-md mt-6 py-3 w-full bg-black text-white hover:bg-gray-800 transition"
+              classNames="rounded-md mt-6 py-3 w-full bg-black text-white hover:bg-gray-800 transition block"
+              link="/checkout"
             />
           </div>
         </div>

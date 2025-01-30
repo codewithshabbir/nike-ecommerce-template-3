@@ -28,6 +28,7 @@ const ShopWomensSlider = () => {
       infinite: true,
       speed: 500,
       slidesToShow: 2,
+      arrows: false,
       slidesToScroll: 1,
       autoplay: true,
       autoplaySpeed: 2000,
@@ -70,8 +71,8 @@ const ShopWomensSlider = () => {
         <Slider {...settings} ref={sliderRef}>
           {womensProducts.map((product) => (
             <Card
-              key={product._id}
-              _id={product._id}
+              key={product._id.split('-')[1]}
+              _id={product._id.split('-')[1]}
               status={product.status}
               name={product.name}
               color={product.color}

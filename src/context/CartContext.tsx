@@ -48,6 +48,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  
+
   // Trigger toast after the cart state updates
   useEffect(() => {
     if (removedItemName) {
@@ -59,7 +61,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         pauseOnHover: true,
         draggable: true,
         theme: "light",
-        transition: Bounce, // Correct transition type
+        transition: Bounce,
       });
       setRemovedItemName(null); // Reset removed item name after the toast
     }

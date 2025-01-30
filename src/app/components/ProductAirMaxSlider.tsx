@@ -13,12 +13,28 @@ import { ProductCardTypes } from '../@types/types';
 const ProductSlider = () => {
   const sliderRef = useRef<Slider | null>(null);
   const [airMaxProducts, setAirMaxProducts] = useState<ProductCardTypes[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Skeleton Loader Component for Products
+  const ProductSkeletonLoader = () => (
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 pb-10 border-b-2">
+      {[...Array(4)].map((_, index) => (
+        <div key={index} className="p-4">
+          <div className="bg-gray-300 animate-pulse h-60 mb-4 rounded-md"></div>
+          <div className="h-4 bg-gray-300 animate-pulse w-3/4 mb-2 rounded-md"></div>
+          <div className="h-4 bg-gray-300 animate-pulse w-1/2 mb-2 rounded-md"></div>
+          <div className="h-4 bg-gray-300 animate-pulse w-1/4 rounded-md"></div>
+        </div>
+      ))}
+    </div>
+  );
 
   // Fetching Air Max products using useEffect
   useEffect(() => {
     const fetchData = async () => {
       const products = await fetchProductListByAirMax();
       setAirMaxProducts(products);
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -28,6 +44,7 @@ const ProductSlider = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 4,
+    arrows: false,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -74,21 +91,25 @@ const ProductSlider = () => {
         </div>
       </div>
       <div className="pb-10">
-        <Slider {...settings} ref={sliderRef}>
-          {airMaxProducts.map((product) => (
-            <Card
-              key={product._id}
-              _id={product._id}
-              status={product.status}
-              name={product.name}
-              color={product.color}
-              currentPrice={product.currentPrice}
-              shortDescription={product.shortDescription}
-              discountedPrice={product.discountedPrice}
-              image_url={product.image_url}
-            />
-          ))}
-        </Slider>
+        {loading ? (
+          <ProductSkeletonLoader />
+        ) : (
+          <Slider {...settings} ref={sliderRef}>
+            {airMaxProducts.map((product) => (
+              <Card
+                key={product._id.split('-')[1]}
+                _id={product._id.split('-')[1]}
+                status={product.status}
+                name={product.name}
+                color={product.color}
+                currentPrice={product.currentPrice}
+                shortDescription={product.shortDescription}
+                discountedPrice={product.discountedPrice}
+                image_url={product.image_url}
+              />
+            ))}
+          </Slider>
+        )}
       </div>
     </>
   );

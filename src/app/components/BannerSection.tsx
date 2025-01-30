@@ -22,7 +22,9 @@ const BannerSection: React.FC<BannerSectionProps> = ({heading, imageUrl, secondH
         <p className="w-full md:w-1/2 text-center py-6">
           {para}
         </p>
-        <Button text={buttonText} classNames="rounded-full py-2" />
+        <div>
+          <Button  text={buttonText} classNames="rounded-full py-2 text-white" />
+        </div>
       </div>
     </section>
   );

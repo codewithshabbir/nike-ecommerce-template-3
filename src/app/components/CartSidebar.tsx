@@ -53,9 +53,9 @@ const CartSidebar: React.FC<cartSidebarProps> = ({ onClickFun, value }) => {
                 <div>
                   <h3 className="text-sm font-medium">{item.name}</h3>
                   <div className="flex gap-2">
-                    <span>Rs: {item.currentPrice}</span>
-                    {item.discountedPrice && (
-                      <span className="text-gray-500 line-through">Rs: {item.discountedPrice}</span>
+                    <span>Rs: {item.discountedPrice}</span>
+                    {item.currentPrice && (
+                      <span className="text-gray-500 line-through">Rs: {item.currentPrice}</span>
                     )}
                   </div>
                 </div>

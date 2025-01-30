@@ -102,3 +102,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.slick-slider > .slick-list > .slick-track {
+	display: flex;
+	gap: 20px;
+} 

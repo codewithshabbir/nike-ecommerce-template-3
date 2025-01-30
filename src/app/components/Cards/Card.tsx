@@ -18,6 +18,9 @@ const Card: React.FC<ProductCardTypes> = ({_id, status, name, color, currentPric
 
   const isItemInCart = cart.some((item) => item._id === _id);
 
+  console.log('my item cart',isItemInCart);
+  
+
   // Handles adding the current product to the cart
   const handleAddToCart = () => {
     setisLoading(true)
@@ -116,9 +119,9 @@ const Card: React.FC<ProductCardTypes> = ({_id, status, name, color, currentPric
           <p className="text-text-secondary-gray">{color}</p>
         </div>
         <div className="flex items-center space-x-2">
-          <span>Rs: {currentPrice}</span>
-          {discountedPrice && (
-            <span className="text-gray-500 line-through">Rs: {discountedPrice}</span>
+          <span>Rs: {discountedPrice}</span>
+          {currentPrice && (
+            <span className="text-gray-500 line-through">Rs: {currentPrice}</span>
           )}
         </div>
     </div>
