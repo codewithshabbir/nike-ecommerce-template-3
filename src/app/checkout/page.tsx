@@ -1,10 +1,29 @@
+'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import deliverIcon from "@public/images/icons/deliver.svg";
 import product38 from '@public/images/products/product-38.png';
 import product67 from '@public/images/products/product-67.png';
+import Button from '../components/Button';
+import { fetchCountries } from '../api/productApi';
 
 const page = () => {
+    const [countries, setcountries] = useState()
+
+    useEffect(() => {
+      const getCountries = async () => {
+        try {
+            const resposne = await fetchCountries();
+            const country = await resposne?.json();
+            setcountries(country);    
+        } catch (error) {
+         console.error("Error fetching countries:", error)   
+        }
+      }
+      getCountries();
+    }, [])
+    console.log(countries);
+    
   return (
     <div className='grid grid-cols-12 px-10 my-10 lg:px-32 lg:gap-20'>
         <div className='col-span-12 lg:col-span-8'>
@@ -15,74 +34,24 @@ const page = () => {
                 <span className='ps-6'>Deliver It</span>
             </div>
             <h2 className='font-bold text-xl pb-4'>Enter your name and address:</h2>
-            <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="First Name" />
-            <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Last Name" />
-            <input className="w-full border-[#E5E5E5] rounded-md px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Address Line 1" />
-            <span className='text-text-primary-gray text-xs'>We do not ship to P.O. boxes</span>
-            <input className="w-full border-[#E5E5E5] rounded-md my-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Address Line 2" />
-            <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Address Line 3" />
-            <div className='flex gap-4'>
-                <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Postal Codes" />
-                <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Locality" />
-            </div>
-            <div className='flex gap-4'>
-                    <select
-                    className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray"
-                    defaultValue="State/Territory">
-                    <option disabled>State/Territory</option>
-                    <option>Option 1</option>
-                    <option>Option 2</option>
-                    </select>
-
-                <div className="relative w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray">
-                    <span className="text-gray-700">India</span>
-                    <span className="absolute right-4 top-5 w-2 h-2 bg-green-500 rounded-full"></span>
+            <form action="">
+                <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="email" placeholder="Email Address" />
+                <div className='flex gap-4'>
+                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="First Name" />
+                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Last Name" />
                 </div>
-            </div>
-            <div>
-                <input type="checkbox" id="save-address" />
-                <label className="ml-1 pl-2 cursor-pointer text-text-secondary-gray" htmlFor="save-address">
-                    Save this address to my profile
-                </label>
-            </div>
-            <div>
-                <input type="checkbox" id="preferred-address" />
-                <label className="ml-1 pl-2 cursor-pointer text-text-secondary-gray" htmlFor="preferred-address">
-                    Make this my preferred address
-                </label>
-            </div>
-            <h2 className='font-bold text-xl pt-4'>What's your contact information?</h2>
-            <div className='my-6'>
-                <input className="w-full border-[#E5E5E5] rounded-md px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Email" />
-                <span className='text-text-primary-gray text-xs'>A confirmation email will be sent after checkout.</span>
-
-                <input className="w-full border-[#E5E5E5] rounded-md mt-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Phone Number" />
-                <span className='text-text-primary-gray text-xs'>A carrier might contact you to confirm delivery.</span>
-            </div>
-            <h2 className='font-bold text-xl pt-4'>What's your PAN?</h2>
-            <input className="w-full border-[#E5E5E5] mt-4 rounded-md px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Email" />
-            <span className='text-text-primary-gray text-xs'>Enter your PAN to enable payment with UPI, Net Banking or local card methods</span>
-            <div className='my-2'>
-                <input type="checkbox" id="PAN-details" />
-                <label className="ml-1 pl-2 cursor-pointer text-text-secondary-gray" htmlFor="PAN-details">
-                    Save PAN details to Nike Profile
-                </label>
-            </div>
-            <div className='mt-12'>
-                <input type="checkbox" id="remember" />
-                <label className="ml-1 pl-2 cursor-pointer text-text-secondary-gray" htmlFor="remember">
-                    I have read and consent to eShopWorld processing my information in accordance with the Privacy Statement and Cookie Policy. eShopWorld is a trusted Nike partner.
-                </label>
-            </div>
-            <div className="bg-[#F5F5F5] mt-14 mb-6 px-4 text-text-secondary-gray text-center cursor-pointer py-4 rounded-full">
-              Continue
-            </div>
-            <div>
-                <h3 className='pt-4 pb-8 border-t-[1px] border-[#E5E5E5]'>Delivery</h3>
-                <h3 className='pt-4 pb-8 border-t-[1px] border-[#E5E5E5] text-text-primary-gray'>Shipping</h3>
-                <h3 className='pt-4 pb-8 border-t-[1px] border-[#E5E5E5] text-text-primary-gray'>Billing</h3>
-                <h3 className='pt-4 pb-8 border-t-[1px] border-[#E5E5E5] text-text-primary-gray'>Payment</h3>
-            </div>
+                <input className="w-full border-[#E5E5E5] rounded-md px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Address" />
+                <input className="w-full border-[#E5E5E5] rounded-md my-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Add Company, C/O, Apt, Suite, Unit" />
+                <div className='flex gap-4'>
+                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="City" />
+                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="State" />
+                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Postal Code" />    
+                </div>
+                <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Phone Number" />
+                <Button text="Save & Continue"
+                    classNames="rounded-md py-4 uppercase text-md text-white block"
+                />
+            </form>
         </div>
         <div className='col-span-12 lg:col-span-4 mt-10 lg:mt-0'>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>      

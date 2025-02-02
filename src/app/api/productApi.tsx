@@ -184,3 +184,13 @@ export const fetchProductsCategoryByGender = async () => {
     return undefined;
   }
 }
+
+export const fetchCountries = async () => {
+  try {
+    const countries = await fetch('https://nike-ecommerce-template-3.vercel.app/api/countries');
+    return countries
+  } catch (error) {
+    console.error('Error fecthing countries:', error);
+    return undefined;
+  }
+}
