@@ -56,3 +56,21 @@ export type CartContextType = {
   sidebarOpen: boolean;
   cartCount: number;
 }
+
+export interface Country {
+  name: string;
+  code: string;
+  flag: string;
+}
+
+export interface FormData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  addressTwo: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  number: string;
+}

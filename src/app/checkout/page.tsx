@@ -2,121 +2,284 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import deliverIcon from "@public/images/icons/deliver.svg";
-import product38 from '@public/images/products/product-38.png';
-import product67 from '@public/images/products/product-67.png';
-import Button from '../components/Button';
-import { fetchCountries } from '../api/productApi';
+import { fetchCountries, fetchProductList } from '../api/productApi';
+import { useCart } from '@/context/CartContext';
+import { Country, FormData, ProductCardTypes } from '../@types/types';
+import { client } from '@/sanity/lib/client';
+import { ToastContainer, Bounce, toast } from 'react-toastify';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'; 
 
 const page = () => {
-    const [countries, setcountries] = useState()
+    const [formData, setFormData] = useState<FormData>({
+        email: '',
+        firstName: '',
+        lastName: '',
+        address: '',
+        addressTwo: '',
+        city: '',
+        postalCode: '',
+        country: '',
+        number: '',
+    });
+    const { cart } = useCart();
+    const [countries, setCountries] = useState<Country[]>([]);
+    const [product, setproduct] = useState<ProductCardTypes[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-      const getCountries = async () => {
+      const fetchLatestProducts = async () =>{
         try {
-            const resposne = await fetchCountries();
-            const country = await resposne?.json();
-            setcountries(country);    
+            const productsData = await fetchProductList();
+            setproduct(productsData);
         } catch (error) {
-         console.error("Error fetching countries:", error)   
+            console.error("Error fetching products:", error);
         }
       }
-      getCountries();
+      fetchLatestProducts();
     }, [])
-    console.log(countries);
-    
-  return (
-    <div className='grid grid-cols-12 px-10 my-10 lg:px-32 lg:gap-20'>
-        <div className='col-span-12 lg:col-span-8'>
-            <h2 className='font-bold text-xl pb-4'>How would you like to get your order?</h2>
-            <p>Customs regulation for India require a copy of the recipient's KYC. The address on the KYC needs to match the shipping address. Our courier will contact you via SMS/email to obtain a copy of your KYC. The KYC will be stored securely and used solely for the purpose of clearing customs (including sharing it with customs officials) for all orders and returns. If your KYC does not match your shipping address, please click the link for more information. <span className='underline'>Learn More</span></p>
-            <div className='flex border-[1.5px] border-black px-4 py-4  rounded-lg my-10'>
-                <Image src={deliverIcon} alt='Deliver Icon'/>
-                <span className='ps-6'>Deliver It</span>
-            </div>
-            <h2 className='font-bold text-xl pb-4'>Enter your name and address:</h2>
-            <form action="">
-                <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="email" placeholder="Email Address" />
-                <div className='flex gap-4'>
-                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="First Name" />
-                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Last Name" />
-                </div>
-                <input className="w-full border-[#E5E5E5] rounded-md px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Address" />
-                <input className="w-full border-[#E5E5E5] rounded-md my-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Add Company, C/O, Apt, Suite, Unit" />
-                <div className='flex gap-4'>
-                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="City" />
-                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="State" />
-                    <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Postal Code" />    
-                </div>
-                <input className="w-full border-[#E5E5E5] rounded-md mb-4 px-4 py-3 border-[2px] placeholder:text-text-secondary-gray" type="text" placeholder="Phone Number" />
-                <Button text="Save & Continue"
-                    classNames="rounded-md py-4 uppercase text-md text-white block"
-                />
-            </form>
-        </div>
-        <div className='col-span-12 lg:col-span-4 mt-10 lg:mt-0'>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>      
-            <div className="flex justify-between text-gray-600 mb-2">
-                <span>Subtotal</span>
-                <span>₹ 20 890.00</span>
-            </div>
-            <div className="flex justify-between text-gray-600 mb-4">
-                <span>Delivery/Shipping</span>
-                <span>Free</span>
-            </div>
-            <hr className="border-gray-300 my-4" />
-            <div className="flex justify-between text-gray-900 font-semibold text-lg mb-2">
-                <span>Total</span>
-                <span>₹ 20 890.00</span>
-            </div>
-            <hr className="border-gray-300 my-4" />
-            <p className="text-xs text-gray-500">
-                (The total reflects the price of your order, including all duties and taxes)
-            </p>
 
-            <h2 className="text-lg font-semibold text-gray-900 mt-6">Arrives Mon, 27 Mar - Wed, 12 Apr</h2>
-            <div>
-                <Image src={product38} alt="Nike Dri-FIT ADV TechKnit Ultra"
-                    className="mt-4 object-cover rounded-md"/>
-                <div>
-                <h3 className="text-lg font-medium mt-2">
-                    Nike Dri-FIT ADV TechKnit Ultra
-                </h3>
-                <p className="text-sm text-gray-600">
-                    Men's Short-Sleeve Running Top
-                </p>
-                <p className="text-sm text-gray-600">
-                    Ashen Slate/Cobalt Bliss
-                </p>
-                <div className="flex gap-20 text-sm text-gray-600 mt-2">
-                    <p>Size: L</p>
-                    <p>Quantity: 1</p>
-                </div>
-                <p className='text-gray-600 mt-2'>₹ 3 895.00</p>
-                </div>
-            </div>
-            <div>
-                <Image src={product67} alt="Nike Dri-FIT ADV TechKnit Ultra"
-                    className="mt-4 object-cover rounded-md"/>
-                <div>
-                <h3 className="text-lg font-medium mt-2">
-                    Nike Dri-FIT ADV TechKnit Ultra
-                </h3>
-                <p className="text-sm text-gray-600">
-                    Men's Short-Sleeve Running Top
-                </p>
-                <p className="text-sm text-gray-600">
-                    Ashen Slate/Cobalt Bliss
-                </p>
-                <div className="flex gap-20 text-sm text-gray-600 mt-2">
-                    <p>Size: L</p>
-                    <p>Quantity: 1</p>
-                </div>
-                <p className='text-gray-600 mt-2'>₹ 3 895.00</p>
-                </div>
-            </div>
-        </div>
-    </div>
-  )
-}
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [e.target.name]: e.target.value
+        }));
+    };
 
-export default page
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true); 
+        const orderData = {
+            _type: 'order',
+            ...formData,
+            totalPrice: cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0),
+            orderSummary: cart.map((product) => ({
+                _type: 'reference',
+                _ref: 'product-'+product._id
+            })),
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+        }
+        const submitOrder = async () => {
+            try {
+                const response = await client.create(orderData);
+                console.log("Order created:", response);
+                setFormData({
+                    email: '',
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    addressTwo: '',
+                    city: '',
+                    postalCode: '',
+                    country: '',
+                    number: '',
+                });
+                toast.success(`Order created successfully!`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            } catch (error) {
+                console.error("Error creating order:", error);
+                toast.error("Error creating order. Please try again.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }finally {
+                setLoading(false);
+            }
+        }
+        submitOrder();
+        console.log("Form data submitted:", formData);
+    };
+
+    useEffect(() => {
+        const getCountries = async () => {
+            try {
+                const response = await fetchCountries();
+                const countryData = await response?.json();
+                setCountries(countryData);
+            } catch (error) {
+                console.error("Error fetching countries:", error);
+            }
+        };
+        getCountries();
+    }, []);
+
+    return (
+        <div className='grid grid-cols-12 gap-8 px-6 lg:px-20 my-10'>
+            {/* Left Column - Delivery and Address Form */}
+            <div className='col-span-12 lg:col-span-8'>
+                <h2 className='font-bold text-2xl mb-6'>How would you like to get your order?</h2>
+                <p className='text-gray-600 mb-8'>
+                    Customs regulation for India require a copy of the recipient's KYC. The address on the KYC needs to match the shipping address. Our courier will contact you via SMS/email to obtain a copy of your KYC. The KYC will be stored securely and used solely for the purpose of clearing customs (including sharing it with customs officials) for all orders and returns. If your KYC does not match your shipping address, please click the link for more information. <span className='underline text-blue-600 cursor-pointer'>Learn More</span>
+                </p>
+
+                <div className='flex items-center border-2 border-black rounded-lg p-4 mb-8'>
+                    <Image src={deliverIcon} alt='Deliver Icon' className='w-6 h-6' />
+                    <span className='ml-4 text-lg'>Deliver It</span>
+                </div>
+
+                <h2 className='font-bold text-2xl mb-6'>Enter your name and address:</h2>
+                <form onSubmit={handleSubmit} className='space-y-6'>
+                    <input
+                        value={formData.email}
+                        onChange={handleChange}
+                        name='email'
+                        className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                        type='email'
+                        placeholder='Email Address'
+                    />
+                    <div className='flex gap-4'>
+                        <input
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            name='firstName'
+                            className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                            type='text'
+                            placeholder='First Name'
+                        />
+                        <input
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            name='lastName'
+                            className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                            type='text'
+                            placeholder='Last Name'
+                        />
+                    </div>
+                    <input
+                        value={formData.address}
+                        onChange={handleChange}
+                        name='address'
+                        className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                        type='text'
+                        placeholder='Address'
+                    />
+                    <input
+                        value={formData.addressTwo}
+                        onChange={handleChange}
+                        name='addressTwo'
+                        className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                        type='text'
+                        placeholder='Add Company, C/O, Apt, Suite, Unit'
+                    />
+                    <div className='flex gap-4'>
+                        <input
+                            value={formData.city}
+                            onChange={handleChange}
+                            name='city'
+                            className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                            type='text'
+                            placeholder='Town/City'
+                        />
+                        <input
+                            value={formData.postalCode}
+                            onChange={handleChange}
+                            name='postalCode'
+                            className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                            type='text'
+                            placeholder='Postal Code'
+                        />
+                        <select
+                            value={formData.country}
+                            onChange={handleChange}
+                            name='country'
+                            className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                        >
+                            <option value='' disabled>Country/Region</option>
+                            {countries.map((country) => (
+                                <option key={country.code} value={country.code}>
+                                    {country.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <input
+                        value={formData.number}
+                        onChange={handleChange}
+                        name='number'
+                        className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
+                        type='text'
+                        placeholder='Phone Number'
+                    />
+                    <button
+                        type='submit'
+                        className='w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors duration-300'
+                        disabled={loading} // Disable button while loading
+                    >
+                        {loading ? (
+                            <AiOutlineLoading3Quarters className='animate-spin mx-auto' size={24} />
+                        ) : (
+                            'Save & Continue'
+                        )}
+                    </button>
+                </form>
+            </div>
+
+            {/* Right Column - Order Summary */}
+            <div className='col-span-12 lg:col-span-4 bg-gray-50 p-6 rounded-lg'>
+                <h2 className='text-2xl font-bold mb-6'>Order Summary</h2>
+                <div className='space-y-4'>
+                    <div className='flex justify-between'>
+                        <span className='text-gray-600'>Subtotal</span>
+                        <span className='font-semibold'>Rs &nbsp;
+                            {cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0)}
+                        </span>
+                    </div>
+                    <div className='flex justify-between'>
+                        <span className='text-gray-600'>Delivery/Shipping</span>
+                        <span className='font-semibold'>Free</span>
+                    </div>
+                    <hr className='border-gray-300' />
+                    <div className='flex justify-between'>
+                        <span className='text-lg font-bold'>Total</span>
+                        <span className='font-semibold'>Rs &nbsp;
+                            {cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0)}
+                        </span>
+                    </div>
+                    <p className='text-sm text-gray-500'>
+                        (The total reflects the price of your order, including all duties and taxes)
+                    </p>
+                </div>
+
+                <h2 className='text-xl font-bold mt-8 mb-4'>New Arrivals</h2>
+                <div className='space-y-6'>
+                    {
+                        product.slice(0,2).map((product) => (
+                            <div key={product._id} className='flex flex-col gap-4'>
+                                <Image src={product.image_url} alt='Nike Dri-FIT ADV TechKnit Ultra' className='w-full h-auto object-cover rounded-md' width={200} height={200} />
+                                <div>
+                                    <h3 className='text-lg font-medium'>{product.name}</h3>
+                                    <p className='text-sm text-gray-600'>{product.shortDescription}</p>
+                                    <div className='flex gap-4 text-sm text-gray-600 mt-1'>
+                                        {product.discountedPrice && (
+                                            <p className="font-medium text-gray-800">Rs: {product.discountedPrice}</p>
+                                        )}
+                                        {product.currentPrice && product.discountedPrice !== product.currentPrice && (
+                                            <p className="font-medium text-gray-600 line-through">Rs: {product.currentPrice}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+            <ToastContainer/>
+        </div>
+    );
+};
+
+export default page;

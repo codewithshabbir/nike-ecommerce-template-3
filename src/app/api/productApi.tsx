@@ -187,7 +187,7 @@ export const fetchProductsCategoryByGender = async () => {
 
 export const fetchCountries = async () => {
   try {
-    const countries = await fetch('https://nike-ecommerce-template-3.vercel.app/api/countries');
+    const countries = await fetch('/api/countries');
     return countries
   } catch (error) {
     console.error('Error fecthing countries:', error);
