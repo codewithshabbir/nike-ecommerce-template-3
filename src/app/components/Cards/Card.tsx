@@ -18,9 +18,6 @@ const Card: React.FC<ProductCardTypes> = ({_id, status, name, color, currentPric
 
   const isItemInCart = cart.some((item) => item._id === _id);
 
-  console.log('my item cart',isItemInCart);
-  
-
   // Handles adding the current product to the cart
   const handleAddToCart = () => {
     setisLoading(true)

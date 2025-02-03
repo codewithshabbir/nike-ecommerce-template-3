@@ -25,6 +25,7 @@ const page = () => {
     const [countries, setCountries] = useState<Country[]>([]);
     const [product, setproduct] = useState<ProductCardTypes[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [productLoading, setproductLoading] = useState<boolean>(true);
 
     useEffect(() => {
       const fetchLatestProducts = async () =>{
@@ -33,6 +34,8 @@ const page = () => {
             setproduct(productsData);
         } catch (error) {
             console.error("Error fetching products:", error);
+        } finally {
+            setproductLoading(false)
         }
       }
       fetchLatestProducts();
@@ -256,10 +259,27 @@ const page = () => {
 
                 <h2 className='text-xl font-bold mt-8 mb-4'>New Arrivals</h2>
                 <div className='space-y-6'>
-                    {
-                        product.slice(0,2).map((product) => (
+                {productLoading ? (
+                        // ✅ Skeleton Loader
+                        Array.from({ length: 2 }).map((_, index) => (
+                            <div key={index} className='flex flex-col gap-4 animate-pulse'>
+                                <div className='bg-gray-300 rounded-md w-full h-[300px]' />
+                                <div className='h-4 bg-gray-300 rounded w-3/4'></div>
+                                <div className='h-4 bg-gray-300 rounded w-1/2'></div>
+                                <div className='h-3 bg-gray-300 rounded w-1/4'></div>
+                            </div>
+                        ))
+                    ) : (
+                        // ✅ Render Actual Products
+                        product.slice(0, 2).map((product) => (
                             <div key={product._id} className='flex flex-col gap-4'>
-                                <Image src={product.image_url} alt='Nike Dri-FIT ADV TechKnit Ultra' className='w-full h-auto object-cover rounded-md' width={200} height={200} />
+                                <Image
+                                    src={product.image_url}
+                                    alt={product.name}
+                                    className='w-full h-auto object-cover rounded-md'
+                                    width={200}
+                                    height={200}
+                                />
                                 <div>
                                     <h3 className='text-lg font-medium'>{product.name}</h3>
                                     <p className='text-sm text-gray-600'>{product.shortDescription}</p>
@@ -274,7 +294,7 @@ const page = () => {
                                 </div>
                             </div>
                         ))
-                    }
+                    )}
                 </div>
             </div>
             <ToastContainer/>

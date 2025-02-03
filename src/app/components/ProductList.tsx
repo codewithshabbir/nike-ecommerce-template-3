@@ -24,14 +24,20 @@ const ProductList = () => {
   const [nikeProducts, setNikeProducts] = useState<ProductCardTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const getProducts = async () => {
-      const products: ProductCardTypes[] = await fetchProductList();
-      setNikeProducts(products);
-      setLoading(false); // Set loading to false once products are fetched
-    };
+  console.log(nikeProducts);
 
-    getProducts();
+  useEffect(() => {
+    try {
+      const getProducts = async () => {
+        const products: ProductCardTypes[] = await fetchProductList();
+        setNikeProducts(products);
+        setLoading(false); // Set loading to false once products are fetched
+      };  
+      getProducts();  
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+
   }, []);
 
   return (

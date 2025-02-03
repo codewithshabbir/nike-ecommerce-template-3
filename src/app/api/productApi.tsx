@@ -38,6 +38,8 @@ export const fetchProductList = async () => {
       }))
       .sort((a, b) => a.numericId - b.numericId);
 
+      sortedProducts.map((products) =>  console.log(products._id))
+      
     return sortedProducts;
   } catch (error) {
     console.error("Error fetching products:", error);
