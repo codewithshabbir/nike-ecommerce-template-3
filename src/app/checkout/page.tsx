@@ -5,9 +5,12 @@ import deliverIcon from "@public/images/icons/deliver.svg";
 import { fetchCountries, fetchProductList } from '../api/productApi';
 import { useCart } from '@/context/CartContext';
 import { Country, FormData, ProductCardTypes } from '../@types/types';
-import { client } from '@/sanity/lib/client';
 import { ToastContainer, Bounce, toast } from 'react-toastify';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'; 
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import StripeForm from '../components/StripeForm';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const page = () => {
     const [formData, setFormData] = useState<FormData>({
@@ -26,6 +29,27 @@ const page = () => {
     const [product, setproduct] = useState<ProductCardTypes[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [productLoading, setproductLoading] = useState<boolean>(true);
+    const [openAccordion, setOpenAccordion] = useState<string | undefined>('stripe-form');
+    const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+
+    const totalAmount = cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0);
+
+    const toggleAccordion = (value: string) => {
+        const getAddress = localStorage.getItem('address');
+        if (getAddress) {
+            const addressData = JSON.parse(getAddress);
+            setFormSubmitted(true);
+            if (addressData) {
+                setOpenAccordion(prev => (prev === value ? undefined : value));
+            }
+        }
+    };
+
+    if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
+        throw new Error('NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined')
+    }
+
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
     useEffect(() => {
       const fetchLatestProducts = async () =>{
@@ -48,13 +72,17 @@ const page = () => {
         }));
     };
 
+    const convertToSubCurrency = (amount: number, factor = 100) =>{
+        return Math.round(amount * factor)
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true); 
-        const orderData = {
+        const addressData = {
             _type: 'order',
             ...formData,
-            totalPrice: cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0),
+            totalPrice: totalAmount,
             orderSummary: cart.map((product) => ({
                 _type: 'reference',
                 _ref: 'product-'+product._id
@@ -62,10 +90,12 @@ const page = () => {
             status: 'pending',
             createdAt: new Date().toISOString(),
         }
-        const submitOrder = async () => {
+        const submitAddress = async () => {
             try {
-                const response = await client.create(orderData);
-                console.log("Order created:", response);
+                localStorage.setItem('address', JSON.stringify(addressData));
+                
+                // const response = await client.create(addressData);
+                console.log("Address Saved:", addressData);
                 setFormData({
                     email: '',
                     firstName: '',
@@ -77,7 +107,7 @@ const page = () => {
                     country: '',
                     number: '',
                 });
-                toast.success(`Order created successfully!`, {
+                toast.success(`Address saved successfully!`, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -87,9 +117,10 @@ const page = () => {
                     theme: "light",
                     transition: Bounce,
                 });
+                setFormSubmitted(true);
             } catch (error) {
-                console.error("Error creating order:", error);
-                toast.error("Error creating order. Please try again.", {
+                console.error("Error saved address:", error);
+                toast.error("Error saved address. Please try again.", {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -103,7 +134,7 @@ const page = () => {
                 setLoading(false);
             }
         }
-        submitOrder();
+        submitAddress();
         console.log("Form data submitted:", formData);
     };
 
@@ -142,6 +173,7 @@ const page = () => {
                         name='email'
                         className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                         type='email'
+                        required
                         placeholder='Email Address'
                     />
                     <div className='flex gap-4'>
@@ -151,6 +183,7 @@ const page = () => {
                             name='firstName'
                             className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                             type='text'
+                            required
                             placeholder='First Name'
                         />
                         <input
@@ -159,6 +192,7 @@ const page = () => {
                             name='lastName'
                             className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                             type='text'
+                            required
                             placeholder='Last Name'
                         />
                     </div>
@@ -168,6 +202,7 @@ const page = () => {
                         name='address'
                         className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                         type='text'
+                        required
                         placeholder='Address'
                     />
                     <input
@@ -176,6 +211,7 @@ const page = () => {
                         name='addressTwo'
                         className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                         type='text'
+                        required
                         placeholder='Add Company, C/O, Apt, Suite, Unit'
                     />
                     <div className='flex gap-4'>
@@ -185,6 +221,7 @@ const page = () => {
                             name='city'
                             className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                             type='text'
+                            required
                             placeholder='Town/City'
                         />
                         <input
@@ -193,12 +230,14 @@ const page = () => {
                             name='postalCode'
                             className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                             type='text'
+                            required
                             placeholder='Postal Code'
                         />
                         <select
                             value={formData.country}
                             onChange={handleChange}
                             name='country'
+                            required
                             className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                         >
                             <option value='' disabled>Country/Region</option>
@@ -215,6 +254,7 @@ const page = () => {
                         name='number'
                         className='w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-black'
                         type='text'
+                        required
                         placeholder='Phone Number'
                     />
                     <button
@@ -229,6 +269,27 @@ const page = () => {
                         )}
                     </button>
                 </form>
+
+                <div className='my-8'>
+                <Accordion type="single" value={openAccordion}>
+                        <AccordionItem value="stripe-form">
+                            <AccordionTrigger onClick={() => toggleAccordion("stripe-form")}>Payment Method</AccordionTrigger>
+                            <AccordionContent>
+                                {formSubmitted && (
+                                    <Elements stripe={stripePromise}
+                                        options={{
+                                            mode: 'payment',
+                                            currency: 'usd',
+                                            amount: convertToSubCurrency(totalAmount),
+                                        }}
+                                    >
+                                        <StripeForm amount={totalAmount}></StripeForm>
+                                    </Elements>
+                                )}
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
             </div>
 
             {/* Right Column - Order Summary */}
@@ -238,7 +299,7 @@ const page = () => {
                     <div className='flex justify-between'>
                         <span className='text-gray-600'>Subtotal</span>
                         <span className='font-semibold'>Rs &nbsp;
-                            {cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0)}
+                            {totalAmount}
                         </span>
                     </div>
                     <div className='flex justify-between'>
@@ -249,7 +310,7 @@ const page = () => {
                     <div className='flex justify-between'>
                         <span className='text-lg font-bold'>Total</span>
                         <span className='font-semibold'>Rs &nbsp;
-                            {cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0)}
+                            {totalAmount}
                         </span>
                     </div>
                     <p className='text-sm text-gray-500'>
