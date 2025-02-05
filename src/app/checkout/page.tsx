@@ -13,6 +13,7 @@ import StripeForm from '../components/StripeForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const page = () => {
+    // State for managing form data
     const [formData, setFormData] = useState<FormData>({
         email: '',
         firstName: '',
@@ -24,7 +25,10 @@ const page = () => {
         country: '',
         number: '',
     });
-    const { cart } = useCart();
+    
+    const { cart } = useCart(); // Access cart data from context
+    
+    // States for API data and UI interactions
     const [countries, setCountries] = useState<Country[]>([]);
     const [product, setproduct] = useState<ProductCardTypes[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -32,8 +36,10 @@ const page = () => {
     const [openAccordion, setOpenAccordion] = useState<string | undefined>('stripe-form');
     const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
+    // Calculate total amount from cart
     const totalAmount = cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0);
 
+    // Function to toggle accordion based on address availability
     const toggleAccordion = (value: string) => {
         const getAddress = localStorage.getItem('address');
         if (getAddress) {
@@ -45,12 +51,13 @@ const page = () => {
         }
     };
 
+    // Ensure Stripe public key is defined
     if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
         throw new Error('NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined')
     }
-
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
+    // Fetch latest products on component mount
     useEffect(() => {
       const fetchLatestProducts = async () =>{
         try {
@@ -65,6 +72,7 @@ const page = () => {
       fetchLatestProducts();
     }, [])
 
+    // Handle form field changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -72,10 +80,12 @@ const page = () => {
         }));
     };
 
+    // Convert currency to subunits (e.g., cents for Stripe payments)
     const convertToSubCurrency = (amount: number, factor = 100) =>{
         return Math.round(amount * factor)
     }
 
+    // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true); 
@@ -90,12 +100,13 @@ const page = () => {
             status: 'pending',
             createdAt: new Date().toISOString(),
         }
+        
         const submitAddress = async () => {
             try {
                 localStorage.setItem('address', JSON.stringify(addressData));
-                
-                // const response = await client.create(addressData);
                 console.log("Address Saved:", addressData);
+                
+                // Reset form after submission
                 setFormData({
                     email: '',
                     firstName: '',
@@ -107,6 +118,7 @@ const page = () => {
                     country: '',
                     number: '',
                 });
+                
                 toast.success(`Address saved successfully!`, {
                     position: "top-right",
                     autoClose: 5000,
@@ -119,8 +131,8 @@ const page = () => {
                 });
                 setFormSubmitted(true);
             } catch (error) {
-                console.error("Error saved address:", error);
-                toast.error("Error saved address. Please try again.", {
+                console.error("Error saving address:", error);
+                toast.error("Error saving address. Please try again.", {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -130,14 +142,14 @@ const page = () => {
                     theme: "light",
                     transition: Bounce,
                 });
-            }finally {
+            } finally {
                 setLoading(false);
             }
         }
         submitAddress();
-        console.log("Form data submitted:", formData);
     };
 
+    // Fetch country list on component mount
     useEffect(() => {
         const getCountries = async () => {
             try {
@@ -166,6 +178,7 @@ const page = () => {
                 </div>
 
                 <h2 className='font-bold text-2xl mb-6'>Enter your name and address:</h2>
+                {/* Address Form */}
                 <form onSubmit={handleSubmit} className='space-y-6'>
                     <input
                         value={formData.email}
@@ -259,7 +272,7 @@ const page = () => {
                     />
                     <button
                         type='submit'
-                        className='w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors duration-300'
+                        className='bg-black w-full px-4 text-center cursor-pointer hover:bg-transparent border-2 border-black hover:text-black transition-all duration-300 ease-in-out rounded-md py-4 uppercase text-md text-white block'
                         disabled={loading} // Disable button while loading
                     >
                         {loading ? (
@@ -272,28 +285,30 @@ const page = () => {
 
                 <div className='my-8'>
                 <Accordion type="single" value={openAccordion}>
-                        <AccordionItem value="stripe-form">
-                            <AccordionTrigger onClick={() => toggleAccordion("stripe-form")}>Payment Method</AccordionTrigger>
-                            <AccordionContent>
-                                {formSubmitted && (
-                                    <Elements stripe={stripePromise}
-                                        options={{
-                                            mode: 'payment',
-                                            currency: 'usd',
-                                            amount: convertToSubCurrency(totalAmount),
-                                        }}
-                                    >
-                                        <StripeForm amount={totalAmount}></StripeForm>
-                                    </Elements>
-                                )}
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
+                    <AccordionItem value="stripe-form">
+                        <AccordionTrigger onClick={() => toggleAccordion("stripe-form")}>Payment Method</AccordionTrigger>
+                        <AccordionContent>
+                            {/* Payment Method */}
+                            {formSubmitted && (
+                                <Elements stripe={stripePromise}
+                                    options={{
+                                        mode: 'payment',
+                                        currency: 'usd',
+                                        amount: convertToSubCurrency(totalAmount),
+                                    }}
+                                >
+                                    <StripeForm amount={totalAmount}></StripeForm>
+                                </Elements>
+                            )}
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
                 </div>
             </div>
 
             {/* Right Column - Order Summary */}
             <div className='col-span-12 lg:col-span-4 bg-gray-50 p-6 rounded-lg'>
+                {/* Order Summary & New Arrivals */}
                 <h2 className='text-2xl font-bold mb-6'>Order Summary</h2>
                 <div className='space-y-4'>
                     <div className='flex justify-between'>

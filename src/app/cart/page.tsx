@@ -88,7 +88,7 @@ const Page = () => {
               </div>
             </div>
             <Button
-              text="Member Checkout"
+              text="Proceed to Checkout"
               classNames="rounded-md mt-6 py-3 w-full bg-black text-white hover:bg-gray-800 transition block"
               link="/checkout"
             />
