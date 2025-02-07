@@ -1,11 +1,10 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchOrder } from "../api/orderApi";
 import { Order } from "../@types/types";
 
-const OrderReceiptPage = () => {
+const OrderReceiptPageContent = () => {
   const searchParams = useSearchParams();
   const paymentIntent = searchParams.get("payment_intent");
   const [order, setOrder] = useState<Order | null>(null);
@@ -161,6 +160,14 @@ const OrderReceiptPage = () => {
         <p className="mt-4">© 2025 Nike. All rights reserved.</p>
       </div>
     </div>
+  );
+};
+
+const OrderReceiptPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrderReceiptPageContent />
+    </Suspense>
   );
 };
 
