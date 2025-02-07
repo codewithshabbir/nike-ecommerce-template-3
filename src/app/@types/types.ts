@@ -53,6 +53,7 @@ export type CartContextType = {
   addToCart: (item: ProductCardTypes) => void; // Function to add a product to the cart
   removeFromCart?: (item: string) => void; 
   toggleAddToCartSidebar: (isOpen: boolean) => void;
+  clearCart: () => void;
   sidebarOpen: boolean;
   cartCount: number;
 }
@@ -73,4 +74,26 @@ export interface FormData {
   postalCode: string;
   country: string;
   number: string;
+}
+
+export interface Order {
+  _type: string;
+  amount: number;
+  currency: string;
+  paymentStatus: string;
+  transactionId: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
+  createdAt: string;
+  orderSummary: {
+    product: { _type: string; _ref: string };
+    name: string;
+    image_url: string;
+    price: number;
+    discount_price: number;
+  }[];
 }

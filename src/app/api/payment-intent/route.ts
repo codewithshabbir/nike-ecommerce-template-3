@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
             amount: amount,
             currency: "usd",
             automatic_payment_methods: { enabled: true },
-        });
+        });        
 
         // Store the client secret in the cache
         paymentIntentsCache.set(amount, paymentIntent.client_secret);

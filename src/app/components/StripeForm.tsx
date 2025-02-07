@@ -4,29 +4,27 @@ import {
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import { StripeError } from "@stripe/stripe-js";
 import React, { useEffect, useState } from "react";
+import { client } from '@/sanity/lib/client';
+import { useRouter } from "next/navigation";
+import { FormData, ProductCardTypes } from "../@types/types";
+import { useCart } from "@/context/CartContext";
 
-const CheckoutForm = ({ amount }: { amount: number }) => {
-  // Initialize Stripe hooks
+const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const { clearCart } = useCart();
 
-  // State to store error messages
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // State to store client secret from Stripe
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  // State to manage loading state during payment processing
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Validate the amount before making API request
-    if (!amount || amount <= 0) {
+    if (amount <= 0) {
       setErrorMessage("Invalid amount.");
       return;
     }
 
-    // Function to fetch payment intent from the backend API
     const fetchPaymentIntent = async () => {
       try {
         const res = await fetch("/api/payment-intent", {
@@ -35,85 +33,104 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
           body: JSON.stringify({ amount }),
         });
 
+        if (!res.ok) throw new Error("Failed to fetch payment intent.");
+
         const data = await res.json();
-        
-        // Store client secret if available, otherwise throw an error
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
-        } else {
-          throw new Error("Failed to get clientSecret.");
-        }
+        if (!data.clientSecret) throw new Error("Missing clientSecret.");
+
+        setClientSecret(data.clientSecret);
       } catch (error) {
-        setErrorMessage("Error fetching payment intent.");
+        setErrorMessage((error as Error).message);
       }
     };
 
-    // Delay the API call slightly to prevent unnecessary rapid requests
-    const timeOut = setTimeout(() => {
-      fetchPaymentIntent();      
-    }, 500);
-
-    return () => clearTimeout(timeOut);
+    const timeout = setTimeout(fetchPaymentIntent, 500);
+    return () => clearTimeout(timeout);
   }, [amount]);
 
-  // Handle form submission
+  const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // Ensure all required Stripe elements and clientSecret are available
-    if (!stripe || !elements || !clientSecret || loading) {
-      setErrorMessage("Payment cannot proceed. Missing required information.");
-      return;
-    }
-
-    // Check if the payment form is properly filled
-    const paymentElement = elements.getElement(PaymentElement);
-    if (!paymentElement) {
-      setErrorMessage("Please fill in the payment details.");
-      return;
-    }
+    if (!stripe || !elements || !clientSecret || loading) return;
 
     setLoading(true);
     setErrorMessage(null);
 
     try {
-      // Ensure the form is fully validated before processing payment
       await elements.submit();
-
-      // Confirm payment with Stripe
       const { error } = await stripe.confirmPayment({
         elements,
         clientSecret,
-        confirmParams: {
-          return_url: `${window.location.origin}/payment-success?amount=${amount}`,
-        },
+        confirmParams: { return_url: `${window.location.origin}/order-receipt` },
+        redirect: 'if_required'
       });
 
-      // Handle any payment errors
-      if (error) {
-        throw new Error(error.message || "Payment failed");
+      if (error) throw new Error(error.message || "Payment failed");
+
+      const intentResposnse = await stripe.retrievePaymentIntent(clientSecret);
+      const paymentIntent = intentResposnse.paymentIntent;
+
+      if (intentResposnse.paymentIntent?.status !== "succeeded") {
+        throw new Error("Payment not completed.");
       }
-    } catch (error: any) {
-      setErrorMessage(error.message);
-      setLoading(false);
+
+      const storedCart = localStorage.getItem("cart");
+      const cart: ProductCardTypes[] = storedCart ? JSON.parse(storedCart) : [];
+      const storedAddress = localStorage.getItem("address");
+      const address: FormData | null = storedAddress ? JSON.parse(storedAddress) : null;
+      
+      if (!address) throw new Error("Address not found in local storage.");
+
+      const orderData = {
+        _type: "order",
+        amount,
+        currency: "usd",
+        paymentStatus: "succeeded",
+        transactionId: paymentIntent?.id,
+        customerName: `${address.firstName} ${address.lastName}`,
+        email: address.email,
+        phone: address.number,
+        address: address.address,
+        city: address.city,
+        country: address.country,
+        orderSummary: cart.map((product) => ({
+          product: { _type: "reference", _ref: `product-${product._id}` },
+          name: product.name,
+          image_url: product.image_url,
+          price: product.currentPrice,
+          discount_price: product.discountedPrice,
+        })),
+        createdAt: new Date().toISOString(),
+      };
+
+      const newOrder = await client.create(orderData);
+      if (newOrder) {
+        router.push(`/order-receipt?payment_intent='${paymentIntent?.id}'`)
+        setTimeout(() => {
+          if (cart) {
+            clearCart();            
+          }
+          localStorage.removeItem("address");
+          setLoading(false)
+        }, 500); 
+      }
+      console.log("✅ Order Saved in Sanity:", newOrder);
+    } catch (error) {
+      setErrorMessage((error as Error).message);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Display error messages if any */}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      
       {clientSecret ? (
         <>
-          {/* Stripe Payment Element (UI component for entering payment details) */}
           <PaymentElement />
-          
-          {/* Payment Submit Button */}
           <button
             type="submit"
             disabled={!stripe || loading}
-            className="bg-black w-full px-4 text-center cursor-pointer hover:bg-transparent border-2 border-black hover:text-black transition-all duration-300 ease-in-out rounded-md py-4 uppercase text-md text-white block"
+            className="bg-black w-full px-4 py-4 text-center uppercase text-md text-white border-2 border-black hover:bg-transparent hover:text-black transition-all duration-300 ease-in-out rounded-md"
           >
             {loading ? "Processing..." : "Pay"}
           </button>

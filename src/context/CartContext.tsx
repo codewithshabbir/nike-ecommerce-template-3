@@ -48,7 +48,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  
+  const clearCart = () => {
+    setCart([]);
+    if (cart.length === 0) {
+      localStorage.removeItem("cart");
+    }
+  };
 
   // Trigger toast after the cart state updates
   useEffect(() => {
@@ -68,7 +73,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [removedItemName]); // Runs when removedItemName changes
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, cartCount: cart.length, sidebarOpen, toggleAddToCartSidebar, removeFromCart }}>
+    <CartContext.Provider value={{ cart, addToCart, cartCount: cart.length, sidebarOpen, toggleAddToCartSidebar, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
