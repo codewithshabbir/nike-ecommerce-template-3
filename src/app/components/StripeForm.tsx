@@ -13,7 +13,6 @@ import { useCart } from "@/context/CartContext";
 const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { clearCart } = useCart();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -84,7 +83,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
 
       const orderData = {
         _type: "order",
-        amount,
+        amount: amount,
         currency: "usd",
         paymentStatus: "succeeded",
         transactionId: paymentIntent?.id,
@@ -106,16 +105,13 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
 
       const newOrder = await client.create(orderData);
       if (newOrder) {
-        router.push(`/order-receipt?payment_intent='${paymentIntent?.id}'`)
+        router.push(`/order-receipt?payment_intent=${paymentIntent?.id}`);
         setTimeout(() => {
-          if (cart) {
-            clearCart();            
-          }
           localStorage.removeItem("address");
           setLoading(false)
         }, 500); 
       }
-      console.log("✅ Order Saved in Sanity:", newOrder);
+      console.log("✅ Order Saved in Sanity:", orderData);
     } catch (error) {
       setErrorMessage((error as Error).message);
     }

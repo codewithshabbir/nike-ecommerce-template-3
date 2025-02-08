@@ -35,9 +35,18 @@ const page = () => {
     const [productLoading, setproductLoading] = useState<boolean>(true);
     const [openAccordion, setOpenAccordion] = useState<string | undefined>('stripe-form');
     const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+    const [totalAmount, settotalAmount] = useState(0);
 
     // Calculate total amount from cart
-    const totalAmount = cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0);
+    useEffect(() => {
+      const storedTotalAmount = cart.reduce((acc, val) => Number(acc) + Number(val.discountedPrice), 0);
+      console.log(storedTotalAmount);
+      
+      settotalAmount(storedTotalAmount);
+    }, [cart])
+
+    console.log(totalAmount);
+    
 
     // Function to toggle accordion based on address availability
     const toggleAccordion = (value: string) => {
@@ -286,7 +295,7 @@ const page = () => {
                 <div className='my-8'>
                 <Accordion type="single" value={openAccordion}>
                     <AccordionItem value="stripe-form">
-                        <AccordionTrigger onClick={() => toggleAccordion("stripe-form")}>Payment Method</AccordionTrigger>
+                        <AccordionTrigger className='font-bold text-2xl' onClick={() => toggleAccordion("stripe-form")}>Payment Method</AccordionTrigger>
                         <AccordionContent>
                             {/* Payment Method */}
                             {formSubmitted && (
