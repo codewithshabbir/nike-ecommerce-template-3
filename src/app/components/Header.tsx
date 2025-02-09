@@ -9,18 +9,16 @@ import searchIcon from "@public/images/icons/search.svg";
 import menuIcon from "@public/images/icons/menu.svg";
 import crossIcon from "@public/images/icons/cross.svg";
 import Link from "next/link";
-import { useCart } from "@/context/CartContext";
+import { useGlobalState } from "@/context/GlobalStateContext";
 import CartSidebar from "./CartSidebar";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const { cartCount, toggleAddToCartSidebar, sidebarOpen } = useCart(); // Get cart item count from context
+  const { cartCount, toggleAddToCartSidebar, sidebarOpen, wishlistCount } = useGlobalState();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
 
   return (
     <div>
@@ -84,7 +82,12 @@ const Header = () => {
                 placeholder="Search"
               />
             </div>
-            <Image src={wishlistIcon} alt="wishlist" />
+            <Link className="relative cursor-pointer flex items-center" href={'/wishlist'}>
+              <Image src={wishlistIcon} alt="wishlist" />
+              <span className="absolute top-2 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
+                {wishlistCount}
+              </span>
+            </Link>
             <div
               className="relative cursor-pointer flex items-center"
               onClick={() => toggleAddToCartSidebar(true)}

@@ -2,21 +2,22 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CiStar } from "react-icons/ci";
 import { LucideArrowLeftRight } from "lucide-react";
 import { IoEyeOutline } from "react-icons/io5";
 import Button from "../Button";
 import { ProductCardTypes } from "@/app/@types/types";
-import { useCart } from "@/context/CartContext";
-import { toast, Bounce } from 'react-toastify';
+import { useGlobalState } from "@/context/GlobalStateContext";
 import 'react-toastify/dist/ReactToastify.css';
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 
 const Card: React.FC<ProductCardTypes> = ({_id, status, name, color, currentPrice, discountedPrice, shortDescription, image_url }) => {
-  const { addToCart, toggleAddToCartSidebar, cart } = useCart();
   const [isLoading, setisLoading] = useState(false);
 
+  const { addToCart, toggleAddToCartSidebar, cart, addToWishlist, wishlist } = useGlobalState();
+
   const isItemInCart = cart.some((item) => item._id === _id);
+  const isItemInWishlist = wishlist.some((item) => item._id === _id);
 
   // Handles adding the current product to the cart
   const handleAddToCart = () => {
@@ -36,19 +37,22 @@ const Card: React.FC<ProductCardTypes> = ({_id, status, name, color, currentPric
       addToCart(item);
       setisLoading(false);
       toggleAddToCartSidebar(true);
-
-      toast.success(`${name} has been added to the cart!`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-        transition: Bounce,
-        });
     }, 1000); 
   };
+
+  const handleWishlist = () => {
+    const item: ProductCardTypes = {
+      _id,
+      name,
+      image_url,
+      currentPrice,
+      discountedPrice,
+      shortDescription,
+      color,
+      status,
+    };
+    addToWishlist(item)
+  }
 
   return (
     <div className="group m-auto md:m-0 focus-visible:outline-none">
@@ -65,12 +69,19 @@ const Card: React.FC<ProductCardTypes> = ({_id, status, name, color, currentPric
           </Link>
           {/* Hover Icons */}
           <div className="absolute z-[2] top-4 right-0 opacity-0 transition-all duration-300 ease-out flex flex-col items-end space-y-2 group-hover:opacity-100 group-hover:-translate-x-4">
-            <button
-              className="bg-white hover:bg-black hover:text-white p-2 text-xl rounded-full shadow-lg transition-all duration-300 ease-out"
+            <div
+              className={`cursor-pointer ${isItemInWishlist ? 'bg-black text-white' : 'bg-white hover:bg-black hover:text-white'} text-xl p-2 rounded-full shadow-lg transition-all duration-300 ease-out`}
               aria-label="Add to Wishlist"
+              onClick={handleWishlist}
             >
-              <CiStar width={24} height={24} />
-            </button>
+              {
+                isItemInWishlist ? (
+                  <FaHeart width={20} height={20}/>
+                ) : (
+                  <FaRegHeart width={20} height={20} />
+                )
+              }
+            </div>
             <button
               className="bg-white hover:bg-black hover:text-white p-2 text-xl rounded-full shadow-lg transition-all duration-300 ease-out"
               aria-label="Compare Product"

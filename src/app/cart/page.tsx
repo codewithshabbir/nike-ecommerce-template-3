@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Button from "../components/Button";
-import { useCart } from "@/context/CartContext";
+import { useGlobalState } from "@/context/GlobalStateContext";
 import { GiShoppingCart } from "react-icons/gi";
 
 const Page = () => {
-  const { cart } = useCart();
+  const { cart } = useGlobalState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

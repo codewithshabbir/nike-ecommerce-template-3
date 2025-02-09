@@ -3,7 +3,7 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import deliverIcon from "@public/images/icons/deliver.svg";
 import { fetchCountries, fetchProductList } from '../api/productApi';
-import { useCart } from '@/context/CartContext';
+import { useGlobalState } from '@/context/GlobalStateContext';
 import { Country, FormData, ProductCardTypes } from '../@types/types';
 import { ToastContainer, Bounce, toast } from 'react-toastify';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'; 
@@ -26,7 +26,7 @@ const page = () => {
         number: '',
     });
     
-    const { cart } = useCart(); // Access cart data from context
+    const { cart } = useGlobalState(); // Access cart data from context
     
     // States for API data and UI interactions
     const [countries, setCountries] = useState<Country[]>([]);

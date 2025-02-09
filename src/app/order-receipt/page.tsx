@@ -3,7 +3,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchOrder } from "../api/orderApi";
 import { Order } from "../@types/types";
-import { useCart } from "@/context/CartContext";
+import { useGlobalState } from "@/context/GlobalStateContext";
 
 // 🔹 Skeleton Loader Component
 const SkeletonLoader = () => {
@@ -33,14 +33,17 @@ const OrderReceiptPageContent = () => {
   const searchParams = useSearchParams();
   const paymentIntent = searchParams.get("payment_intent");
   const [order, setOrder] = useState<Order | null>(null);
-  const { clearCart, cart } = useCart();
+  const { clearCart, clearWishlist, cart, wishlist } = useGlobalState();
 
   useEffect(() => {
     if (cart.length > 0) {
       clearCart();
     }
+    if (wishlist.length > 0) {
+      clearWishlist();
+    }
     window.scrollTo(0, 0);
-  }, []);
+  }, [cart, wishlist]); 
 
   useEffect(() => {
     if (paymentIntent) {

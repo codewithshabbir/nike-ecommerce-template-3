@@ -1,4 +1,4 @@
-import { useCart } from "@/context/CartContext";
+import { useGlobalState } from "@/context/GlobalStateContext";
 import React from "react";
 import { IoTrashOutline } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
@@ -6,7 +6,7 @@ import Button from "./Button";
 import { cartSidebarProps } from "../@types/types";
 
 const CartSidebar: React.FC<cartSidebarProps> = ({ onClickFun, value }) => {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart } = useGlobalState();
 
   // Check if removeFromCart is defined before invoking it
   const handleRemoveFromCart = (itemId: string) => {

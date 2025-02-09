@@ -47,16 +47,21 @@ export interface cartSidebarProps {
   value: boolean;
 }
 
-// Cart context type, used for managing cart state, adding/removing items, and counting items
-export type CartContextType = {
-  cart: ProductCardTypes[]; // Array of products in the cart
-  addToCart: (item: ProductCardTypes) => void; // Function to add a product to the cart
-  removeFromCart?: (item: string) => void; 
-  toggleAddToCartSidebar: (isOpen: boolean) => void;
-  clearCart: () => void;
-  sidebarOpen: boolean;
+// Combined Global State Context
+export type GlobalStateContextType = {
+  cart: ProductCardTypes[];
+  wishlist: ProductCardTypes[];
   cartCount: number;
-}
+  wishlistCount: number;
+  sidebarOpen: boolean;
+  toggleAddToCartSidebar: (isOpen: boolean) => void;
+  addToCart: (item: ProductCardTypes) => void;
+  removeFromCart: (itemId: string) => void;
+  clearCart: () => void;
+  clearWishlist: () => void;
+  addToWishlist: (item: ProductCardTypes) => void;
+  removeFromWishlist: (itemId: string) => void;
+};
 
 export interface Country {
   name: string;

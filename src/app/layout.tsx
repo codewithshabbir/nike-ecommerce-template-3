@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { CartProvider } from "@/context/CartContext";
+import { GlobalStateProvider } from "@/context/GlobalStateContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,11 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <CartProvider>
+        <GlobalStateProvider>
           <Header />
           <main>{children}</main>
           <Footer />
-        </CartProvider>
+        </GlobalStateProvider>
       </body>
     </html>
   );

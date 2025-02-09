@@ -8,7 +8,6 @@ import React, { useEffect, useState } from "react";
 import { client } from '@/sanity/lib/client';
 import { useRouter } from "next/navigation";
 import { FormData, ProductCardTypes } from "../@types/types";
-import { useCart } from "@/context/CartContext";
 
 const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
