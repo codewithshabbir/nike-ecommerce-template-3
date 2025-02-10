@@ -168,6 +168,24 @@ export const fetchProductsCategory = async () => {
   }
 }
 
+export const fetchSearchProducts = async (searchTerm:string) => {
+  try {
+    const groqQuery = `*[_type == "product" && name match $searchTerm]{
+      _id, 
+      name, 
+      discountedPrice, 
+      'image_url': image.asset->url
+    }`;
+
+    const products = await client.fetch(groqQuery, { searchTerm: `"*${searchTerm}*"` });
+    return products;
+  } catch (error) {
+    console.error("Error fetching search products:", error);
+    return []; // Return empty array on error to prevent crashes
+  }
+};
+
+
 export const fetchProductsCategoryByGender = async () => {
   try {
     const productCategory = await fetchProductsCategory();

@@ -31,6 +31,13 @@ export interface ProductCardTypes {
   image_url: string;
 };
 
+export interface SearchProducts {
+  _id:string;
+  discountedPrice: number,
+  name: string;
+  image_url: string;
+};
+
 export interface ButtonProps {
   text: string;
   classNames: string;

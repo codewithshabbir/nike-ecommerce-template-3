@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import topLogo from "@public/images/logo/favicon.svg";
 import logo from "@public/images/logo/logo.svg";
 import wishlistIcon from "@public/images/icons/wishlist.svg";
@@ -11,14 +11,31 @@ import crossIcon from "@public/images/icons/cross.svg";
 import Link from "next/link";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import CartSidebar from "./CartSidebar";
+import { fetchSearchProducts } from "../api/productApi";
+import { SearchProducts } from "../@types/types";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cartCount, toggleAddToCartSidebar, sidebarOpen, wishlistCount } = useGlobalState();
+  const { cartCount, toggleAddToCartSidebar, sidebarOpen, wishlistCount } =
+    useGlobalState();
+  const [query, setquery] = useState("");
+  const [result, setresult] = useState<SearchProducts[]>([]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    if (query.length < 2) {
+      setresult([]);
+      return;
+    }
+    const fetchResult = async () => {
+      const productData: SearchProducts[] = await fetchSearchProducts(query);
+      setresult(productData);
+    };
+    fetchResult();
+  }, [query]);
 
   return (
     <div>
@@ -74,15 +91,57 @@ const Header = () => {
             </li>
           </ul>
           <div className="flex space-x-6">
-            <div className="flex px-4 py-3 rounded-full w-[64%] bg-light-gray">
-              <Image src={searchIcon} alt="search" />
-              <input
-                className="pl-4 focus-visible:outline-none w-[64%] bg-light-gray"
-                type="text"
-                placeholder="Search"
-              />
+            <div className="relative w-full max-w-md">
+              {/* Search Bar */}
+              <div className="flex px-4 py-3 rounded-full bg-light-gray border border-gray-300 focus-within:border-black">
+                <Image src={searchIcon} alt="search" />
+                <input
+                  className="pl-4 flex-1 bg-light-gray focus:outline-none"
+                  type="text"
+                  placeholder="Search"
+                  value={query}
+                  onChange={(e) => setquery(e.target.value)}
+                />
+              </div>
+
+              {/* Search Results Dropdown */}
+              {query.length >= 2 && (
+                <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
+                  {result.length > 0 ? (
+                    result.map((product) => (
+                      <Link
+                        href={`/shop/${product._id.split("-")[1]}`}
+                        key={product._id}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition"
+                      >
+                        <Image
+                          src={product.image_url}
+                          alt={product.name}
+                          width={40}
+                          height={40}
+                          className="rounded-md"
+                        />
+                        <div>
+                          <p className="text-sm font-medium">{product.name}</p>
+                          <p className="text-xs text-gray-500">
+                            ${product.discountedPrice}
+                          </p>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="px-4 py-3 text-gray-500 text-sm text-center">
+                      No products found
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            <Link className="relative cursor-pointer flex items-center" href={'/wishlist'}>
+
+            <Link
+              className="relative cursor-pointer flex items-center"
+              href={"/wishlist"}
+            >
               <Image src={wishlistIcon} alt="wishlist" />
               <span className="absolute top-2 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
                 {wishlistCount}
@@ -106,8 +165,24 @@ const Header = () => {
           <Image src={logo} alt="Logo" />
         </Link>
         <div className="flex gap-6">
-          <Image src={wishlistIcon} alt="wishlist" />
-          <Image src={cartIcon} alt="cart" />
+        <Link
+              className="relative cursor-pointer flex items-center"
+              href={"/wishlist"}
+            >
+              <Image src={wishlistIcon} alt="wishlist" />
+              <span className="absolute top-0 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
+                {wishlistCount}
+              </span>
+            </Link>
+          <div
+              className="relative cursor-pointer flex items-center"
+              onClick={() => toggleAddToCartSidebar(true)}
+            >
+              <Image src={cartIcon} alt="cart" />
+              <span className="absolute top-0 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
+                {cartCount}
+              </span>
+            </div>
           <Link href="#" onClick={toggleMenu}>
             <Image src={menuIcon} width={30} height={30} alt="Menu" />
           </Link>
@@ -138,13 +213,49 @@ const Header = () => {
               <Image src={crossIcon} width={30} height={30} alt="Close" />
             </Link>
           </div>
-          <div className="flex px-4 py-3 mt-6 rounded-full w-[96%] bg-light-gray">
+          <div className="relative w-full max-w-md">
+          <div className="flex px-4 py-3 mt-6 rounded-full w-full bg-light-gray">
             <Image src={searchIcon} alt="search" />
             <input
-              className="pl-4 focus-visible:outline-none w-[64%] bg-light-gray"
+              className="pl-4 focus-visible:outline-none w-full bg-light-gray"
               type="text"
               placeholder="Search"
+              value={query}
+                  onChange={(e) => setquery(e.target.value)}
             />
+          </div>
+            {/* Search Results Dropdown */}
+            {query.length >= 2 && (
+                <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
+                  {result.length > 0 ? (
+                    result.map((product) => (
+                      <Link
+                        href={`/shop/${product._id.split("-")[1]}`}
+                        key={product._id}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition"
+                      >
+                        <Image
+                          src={product.image_url}
+                          alt={product.name}
+                          width={40}
+                          height={40}
+                          className="rounded-md"
+                        />
+                        <div>
+                          <p className="text-sm font-medium">{product.name}</p>
+                          <p className="text-xs text-gray-500">
+                            ${product.discountedPrice}
+                          </p>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="px-4 py-3 text-gray-500 text-sm text-center">
+                      No products found
+                    </div>
+                  )}
+                </div>
+              )}
           </div>
           <ul className="space-y-6 mt-6">
             <li>
