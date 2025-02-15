@@ -97,7 +97,7 @@ const Header = () => {
                 <Image src={searchIcon} alt="search" />
                 <input
                   className="pl-4 flex-1 bg-light-gray focus:outline-none"
-                  type="text"
+                  type="search"
                   placeholder="Search"
                   value={query}
                   onChange={(e) => setquery(e.target.value)}
@@ -165,24 +165,24 @@ const Header = () => {
           <Image src={logo} alt="Logo" />
         </Link>
         <div className="flex gap-6">
-        <Link
-              className="relative cursor-pointer flex items-center"
-              href={"/wishlist"}
-            >
-              <Image src={wishlistIcon} alt="wishlist" />
-              <span className="absolute top-0 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
-                {wishlistCount}
-              </span>
-            </Link>
+          <Link
+            className="relative cursor-pointer flex items-center"
+            href={"/wishlist"}
+          >
+            <Image src={wishlistIcon} alt="wishlist" />
+            <span className="absolute top-0 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
+              {wishlistCount}
+            </span>
+          </Link>
           <div
-              className="relative cursor-pointer flex items-center"
-              onClick={() => toggleAddToCartSidebar(true)}
-            >
-              <Image src={cartIcon} alt="cart" />
-              <span className="absolute top-0 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
-                {cartCount}
-              </span>
-            </div>
+            className="relative cursor-pointer flex items-center"
+            onClick={() => toggleAddToCartSidebar(true)}
+          >
+            <Image src={cartIcon} alt="cart" />
+            <span className="absolute top-0 -right-1 bg-black text-white text-[10px] rounded-lg w-4 h-4 flex justify-center items-center">
+              {cartCount}
+            </span>
+          </div>
           <Link href="#" onClick={toggleMenu}>
             <Image src={menuIcon} width={30} height={30} alt="Menu" />
           </Link>
@@ -214,48 +214,48 @@ const Header = () => {
             </Link>
           </div>
           <div className="relative w-full max-w-md">
-          <div className="flex px-4 py-3 mt-6 rounded-full w-full bg-light-gray">
-            <Image src={searchIcon} alt="search" />
-            <input
-              className="pl-4 focus-visible:outline-none w-full bg-light-gray"
-              type="text"
-              placeholder="Search"
-              value={query}
-                  onChange={(e) => setquery(e.target.value)}
-            />
-          </div>
+            <div className="flex px-4 py-3 mt-6 rounded-full w-full bg-light-gray">
+              <Image src={searchIcon} alt="search" />
+              <input
+                className="pl-4 focus-visible:outline-none w-full bg-light-gray"
+                type="search"
+                placeholder="Search"
+                value={query}
+                onChange={(e) => setquery(e.target.value)}
+              />
+            </div>
             {/* Search Results Dropdown */}
             {query.length >= 2 && (
-                <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
-                  {result.length > 0 ? (
-                    result.map((product) => (
-                      <Link
-                        href={`/shop/${product._id.split("-")[1]}`}
-                        key={product._id}
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition"
-                      >
-                        <Image
-                          src={product.image_url}
-                          alt={product.name}
-                          width={40}
-                          height={40}
-                          className="rounded-md"
-                        />
-                        <div>
-                          <p className="text-sm font-medium">{product.name}</p>
-                          <p className="text-xs text-gray-500">
-                            ${product.discountedPrice}
-                          </p>
-                        </div>
-                      </Link>
-                    ))
-                  ) : (
-                    <div className="px-4 py-3 text-gray-500 text-sm text-center">
-                      No products found
-                    </div>
-                  )}
-                </div>
-              )}
+              <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
+                {result.length > 0 ? (
+                  result.map((product) => (
+                    <Link
+                      href={`/shop/${product._id.split("-")[1]}`}
+                      key={product._id}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition"
+                    >
+                      <Image
+                        src={product.image_url}
+                        alt={product.name}
+                        width={40}
+                        height={40}
+                        className="rounded-md"
+                      />
+                      <div>
+                        <p className="text-sm font-medium">{product.name}</p>
+                        <p className="text-xs text-gray-500">
+                          ${product.discountedPrice}
+                        </p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-gray-500 text-sm text-center">
+                    No products found
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <ul className="space-y-6 mt-6">
             <li>

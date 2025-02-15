@@ -8,44 +8,43 @@ const GlobalStateContext = createContext<GlobalStateContextType | undefined>(und
 export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<ProductCardTypes[]>([]);
   const [wishlist, setWishlist] = useState<ProductCardTypes[]>([]);
-  const [sidebarOpen, setsidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Load cart from localStorage
+  // Load cart & wishlist from localStorage
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) setCart(JSON.parse(savedCart));
+
+    const savedWishlist = localStorage.getItem("wishlist");
+    if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
   }, []);
 
   // Save cart to localStorage
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
-
-  // Load wishlist from localStorage
-  useEffect(() => {
-    const savedWishlist = localStorage.getItem('wishlist');
-    if (savedWishlist) {
-      setWishlist(JSON.parse(savedWishlist));
-    }
-  }, []);
 
   // Save wishlist to localStorage
   useEffect(() => {
-    if (wishlist.length > 0) {
-      localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    } else {
-      localStorage.removeItem('wishlist');
-    }
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
+
+  // Multi-tab synchronization
+  useEffect(() => {
+    const syncStorage = (event: StorageEvent) => {
+      if (event.key === "cart") setCart(JSON.parse(event.newValue || "[]"));
+      if (event.key === "wishlist") setWishlist(JSON.parse(event.newValue || "[]"));
+    };
+    window.addEventListener("storage", syncStorage);
+    return () => window.removeEventListener("storage", syncStorage);
+  }, []);
 
   // Toggle cart sidebar
   const toggleAddToCartSidebar = (isOpen: boolean) => {
-    setsidebarOpen(isOpen);
+    setSidebarOpen(isOpen);
   };
 
-  // Add to Cart with Quantity Update
+  // Add to Cart
   const addToCart = (item: ProductCardTypes) => {
     setCart((prevCart) => {
       if (prevCart.some((cartItem) => cartItem._id === item._id)) {
@@ -66,6 +65,7 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ c
     localStorage.removeItem("cart");
   };
 
+  // Clear wishlist
   const clearWishlist = () => {
     setWishlist([]);
     localStorage.removeItem("wishlist");
@@ -75,7 +75,9 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const addToWishlist = (item: ProductCardTypes) => {
     setWishlist((prevWishlist) => {
       const isAlreadyInWishlist = prevWishlist.some((wishlistItem) => wishlistItem._id === item._id);
-      return isAlreadyInWishlist ? prevWishlist.filter((wishlistItem) => wishlistItem._id !== item._id) : [...prevWishlist, item];
+      return isAlreadyInWishlist
+        ? prevWishlist.filter((wishlistItem) => wishlistItem._id !== item._id)
+        : [...prevWishlist, item];
     });
   };
 
@@ -110,7 +112,7 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ c
 export const useGlobalState = () => {
   const context = useContext(GlobalStateContext);
   if (!context) {
-    throw new Error('useGlobalState must be used within a GlobalStateProvider');
+    throw new Error("useGlobalState must be used within a GlobalStateProvider");
   }
   return context;
 };

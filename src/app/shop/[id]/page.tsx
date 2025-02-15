@@ -10,7 +10,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { TbTruckReturn } from "react-icons/tb";
 
 const SkeletonLoader = () => (
-  <div className="animate-pulse grid grid-cols-12 px-8 md:px-20 my-16 md:my-16 gap-0 md:gap-10">
+  <div className="animate-pulse grid grid-cols-12 px-8 md:px-20 my-16 md:my-16 gap-0 md:gap-8">
     {/* Image Skeleton */}
     <div className="col-span-12 md:col-span-6">
       <div className="w-[500px] h-[500px] bg-gray-300 rounded-md"></div>
@@ -135,7 +135,7 @@ const ProductPage = ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   return (
-    <div className="grid grid-cols-12 px-8 md:px-20 my-16 md:my-16 gap-0 md:gap-10">
+    <div className="grid grid-cols-12 px-8 md:px-20 my-16 md:my-16 gap-0 md:gap-8">
       <div className="col-span-12 md:col-span-6">
         <Image
           src={productData.image_url}
