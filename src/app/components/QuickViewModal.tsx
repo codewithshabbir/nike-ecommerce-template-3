@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import ReactDOM from "react-dom";
 import { IoClose } from "react-icons/io5";
 import { ProductCardTypes } from "@/app/@types/types";
 import Button from "./Button";
@@ -83,7 +84,10 @@ const QuickViewModal: React.FC<QuickViewProps> = ({ product, onClose }) => {
 
   if (!product) return null;
 
-  return (
+  console.log(product);
+  
+
+  const modalContent = (
     <div
       className={`fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300 ${
         isVisible ? "opacity-100" : "opacity-0"
@@ -172,6 +176,7 @@ const QuickViewModal: React.FC<QuickViewProps> = ({ product, onClose }) => {
       </div>
     </div>
   );
+  return ReactDOM.createPortal(modalContent, document.body);
 };
 
 export default QuickViewModal;

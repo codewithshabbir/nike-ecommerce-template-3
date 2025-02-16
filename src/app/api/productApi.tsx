@@ -89,6 +89,7 @@ export const fetchProductListByAirMax = async () => {
         discountedPrice,
         color,
         status,
+        shortDescription,
         brandName,
         'image_url': image.asset->url
       }
@@ -116,6 +117,7 @@ export const fetchProductListByMens = async () => {
         color,
         status,
         brandName,
+        shortDescription,
         'image_url': image.asset->url
       }
     `;
@@ -142,6 +144,7 @@ export const fetchProductListByWomens = async () => {
         color,
         status,
         brandName,
+        shortDescription,
         'image_url': image.asset->url
       }
     `;

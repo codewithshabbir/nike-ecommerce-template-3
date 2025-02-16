@@ -25,7 +25,8 @@ const Card: React.FC<ProductCardTypes> = ({
   const [QuickViewProduct, setQuickViewProduct] =
     useState<ProductCardTypes | null>(null);
 
-  const { addToCart, toggleAddToCartSidebar, cart, addToWishlist, wishlist } = useGlobalState();
+  const { addToCart, toggleAddToCartSidebar, cart, addToWishlist, wishlist } =
+    useGlobalState();
 
   const isItemInCart = cart.some((item) => item._id === _id);
   const isItemInWishlist = wishlist.some((item) => item._id === _id);
@@ -161,7 +162,6 @@ const Card: React.FC<ProductCardTypes> = ({
       {QuickViewProduct && (
         <QuickViewModal
           product={QuickViewProduct}
-
           onClose={() => setQuickViewProduct(null)}
         />
       )}
